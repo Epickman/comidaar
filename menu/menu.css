@@ -55,9 +55,22 @@ html { scroll-behavior: smooth; }
 .menu-tabs { position: sticky; top: var(--header-h); z-index: 11; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
 .menu-tabs-fila { display: flex; justify-content: center; }
 .menu-tabs-fila .menu-tab { margin-bottom: 0; }
-/* en mobile las tres pestañas se reparten el ancho y el texto puede ir en dos líneas */
+/* en mobile las tres pestañas se reparten el ancho (con aire a los costados) y el texto puede ir en dos líneas */
 @media (max-width: 560px) {
-  .menu-tabs-fila .menu-tab { flex: 1 1 0; padding: 12px 6px; font-size: 1rem; line-height: 1.2; text-wrap: balance; }
+  .menu-tabs-fila { gap: 6px; padding: 0 6px; }
+  .menu-tabs-fila .menu-tab { flex: 1 1 0; min-width: 0; padding: 12px 2px; text-align: center; font-size: clamp(.86rem, 4.2vw, 1rem); line-height: 1.2; text-wrap: balance; }
+}
+/* barra de secciones: nombres cortos en mobile para que entren las tres */
+.chip-corto { display: none; }
+@media (max-width: 560px) {
+  .menu-nav { justify-content: safe center; gap: 8px; }
+  .menu-nav .chip { padding: 9px 14px; }
+  .chip-largo { display: none; }
+  .chip-corto { display: inline; }
+}
+@media (max-width: 380px) {
+  .menu-nav { gap: 6px; }
+  .menu-nav .chip { padding: 8px 11px; font-size: .62rem; letter-spacing: .1em; }
 }
 .menu-tab {
   padding: 14px clamp(18px, 4vw, 36px); background: none; border: 0; border-bottom: 1px solid transparent; margin-bottom: -1px;

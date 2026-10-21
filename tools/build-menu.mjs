@@ -16,9 +16,10 @@ const root = new URL('../', import.meta.url);
 const data = JSON.parse(readFileSync(new URL('data/menu.json', root), 'utf8'));
 
 const SECCIONES = [
-  { id: 'entradas', titulo: 'Platos de entrada' },
-  { id: 'principales', titulo: 'Platos principales' },
-  { id: 'postres', titulo: 'Postres' },
+  // `corto` es el nombre de la sección en la barra de navegación en mobile
+  { id: 'entradas', titulo: 'Platos de entrada', corto: 'Entradas' },
+  { id: 'principales', titulo: 'Platos principales', corto: 'Principales' },
+  { id: 'postres', titulo: 'Postres', corto: 'Postres' },
 ];
 const IMG_W = 1200;
 const IMG_H = 676;
@@ -110,7 +111,7 @@ function card(m, p) {
 function panel(m, i) {
   const contenido = m.secciones.length ? `
       <nav class="filters menu-nav" aria-label="Secciones del ${esc(m.titulo)}">
-        ${m.secciones.map((s) => `<a class="chip" href="#${s.ancla}">${esc(s.titulo)}</a>`).join('\n        ')}
+        ${m.secciones.map((s) => `<a class="chip" href="#${s.ancla}"><span class="chip-largo">${esc(s.titulo)}</span><span class="chip-corto" aria-hidden="true">${esc(s.corto)}</span></a>`).join('\n        ')}
       </nav>
 ${m.secciones.map((s) => `
       <section class="menu-section" id="${s.ancla}" aria-labelledby="${s.ancla}-titulo">
