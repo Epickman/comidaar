@@ -3,6 +3,7 @@ import {ClockIcon} from '@sanity/icons/Clock'
 import {CheckmarkCircleIcon} from '@sanity/icons/CheckmarkCircle'
 
 // Las reseñas llegan como borrador: publicar una es aprobarla.
+// Las listas usan perspectiva, donde _id no tiene el prefijo drafts.: por eso _originalId.
 export const structure: StructureResolver = (S) =>
   S.list()
     .title('Reseñas')
@@ -13,7 +14,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title('Pendientes de aprobar')
-            .filter('_type == "resena" && _id in path("drafts.**")')
+            .filter('_type == "resena" && _originalId in path("drafts.**")')
             .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
         ),
       S.listItem()
@@ -22,7 +23,7 @@ export const structure: StructureResolver = (S) =>
         .child(
           S.documentList()
             .title('Publicadas')
-            .filter('_type == "resena" && !(_id in path("drafts.**"))')
+            .filter('_type == "resena" && !(_originalId in path("drafts.**"))')
             .defaultOrdering([{field: '_createdAt', direction: 'desc'}]),
         ),
     ])
