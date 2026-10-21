@@ -1,12 +1,15 @@
 (() => {
   // ---------- header: se compacta al hacer scroll (igual que la carta) ----------
   const topbar = document.getElementById('topbar');
+  const tabsBar = document.querySelector('.menu-tabs');
   const syncHeader = () => {
     topbar.classList.toggle('scrolled', scrollY > 8);
     document.documentElement.style.setProperty('--header-h', `${topbar.offsetHeight}px`);
+    if (tabsBar) document.documentElement.style.setProperty('--tabs-h', `${tabsBar.offsetHeight}px`);
   };
   addEventListener('scroll', syncHeader, { passive: true });
   new ResizeObserver(syncHeader).observe(topbar);
+  if (tabsBar) new ResizeObserver(syncHeader).observe(tabsBar);
   syncHeader();
 
   // ---------- pestañas Premium / Tradicional ----------
@@ -63,30 +66,59 @@
   }, { rootMargin: '-35% 0px -55% 0px' });
   secciones.forEach((s) => io.observe(s));
 
-  // ---------- detalle: pasar de plato con flechas, teclado o deslizando la foto ----------
-  const anterior = document.querySelector('.stage-prev');
-  const siguiente = document.querySelector('.stage-next');
-  if (anterior && siguiente) {
-    const recordar = (dir) => { try { sessionStorage.setItem('menu-dir', dir); } catch {} };
-    const ir = (a, dir) => { recordar(dir); location.href = a.href; };
-    document.querySelectorAll('a[rel="prev"]').forEach((a) => a.addEventListener('click', () => recordar('anterior')));
-    document.querySelectorAll('a[rel="next"]').forEach((a) => a.addEventListener('click', () => recordar('siguiente')));
+  // ---------- carrusel de platos ----------
+  const pista = document.querySelector('.carrusel-pista');
+  if (pista) {
+    const cards = [...pista.children];
+    const numero = document.querySelector('.carrusel-count span');
+    const boxes = [...document.querySelectorAll('.lista-box')];
+    let activa = cards.findIndex((c) => c.classList.contains('is-activa'));
 
+    const centrar = (c, behavior) => pista.scrollTo({ left: c.offsetLeft - (pista.clientWidth - c.offsetWidth) / 2, behavior });
+    // al dar la vuelta (del último al primero o al revés) salta sin recorrer todo
+    const ir = (i) => centrar(cards[(i + cards.length) % cards.length], i < 0 || i >= cards.length ? 'instant' : 'smooth');
+
+    function marcarActiva() {
+      const medio = pista.scrollLeft + pista.clientWidth / 2;
+      let i = 0;
+      cards.forEach((c, j) => {
+        if (Math.abs(c.offsetLeft + c.offsetWidth / 2 - medio) < Math.abs(cards[i].offsetLeft + cards[i].offsetWidth / 2 - medio)) i = j;
+      });
+      if (i === activa) return;
+      cards[activa]?.classList.remove('is-activa');
+      cards[i].classList.add('is-activa');
+      activa = i;
+      numero.textContent = i + 1;
+      boxes.forEach((b) => (b.dataset.id === cards[i].id ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current')));
+      document.title = cards[i].dataset.titulo;
+      // la URL sigue al plato visible (sin sumar entradas al historial)
+      history.replaceState(null, '', `../${cards[i].id}/`);
+    }
+
+    centrar(cards[activa], 'instant');
+    let pendiente = false;
+    pista.addEventListener('scroll', () => {
+      if (pendiente) return;
+      pendiente = true;
+      requestAnimationFrame(() => { pendiente = false; marcarActiva(); });
+    }, { passive: true });
+
+    document.querySelector('.carrusel-prev').addEventListener('click', () => ir(activa - 1));
+    document.querySelector('.carrusel-next').addEventListener('click', () => ir(activa + 1));
+    // tocar una card vecina la trae al centro
+    cards.forEach((c, j) => c.addEventListener('click', () => { if (j !== activa) ir(j); }));
     addEventListener('keydown', (e) => {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
-      if (e.key === 'ArrowLeft') ir(anterior, 'anterior');
-      if (e.key === 'ArrowRight') ir(siguiente, 'siguiente');
+      if (e.key === 'ArrowLeft') { e.preventDefault(); ir(activa - 1); }
+      if (e.key === 'ArrowRight') { e.preventDefault(); ir(activa + 1); }
     });
+    addEventListener('resize', () => centrar(cards[activa], 'instant'));
 
-    const stage = document.querySelector('.menu-detalle .stage');
-    let x0 = null;
-    stage.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
-    stage.addEventListener('touchend', (e) => {
-      if (x0 === null) return;
-      const dx = e.changedTouches[0].clientX - x0;
-      x0 = null;
-      if (Math.abs(dx) > 50) dx < 0 ? ir(siguiente, 'siguiente') : ir(anterior, 'anterior');
-    });
+    // listado: un box lleva el carrusel a ese plato y vuelve arriba
+    boxes.forEach((b) => b.addEventListener('click', (e) => {
+      e.preventDefault();
+      ir(cards.findIndex((c) => c.id === b.dataset.id));
+      document.querySelector('.carrusel').scrollIntoView({ behavior: 'smooth' });
+    }));
   }
-
 })();

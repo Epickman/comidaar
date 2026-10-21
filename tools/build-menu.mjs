@@ -8,6 +8,7 @@
 // Hay un menú por tipo (premium, regular); cada uno con sus platos
 // (categoria: entradas | principales | postres); uno sin platos muestra
 // "Próximamente". `contacto.email` es el destino del botón "Escribinos" del detalle.
+// Reseñas (opcional, por plato): "resenas": [{ "autor": "…", "texto": "…", "estrellas": 5 }]
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
@@ -151,21 +152,43 @@ ${menus.map(panel).join('\n')}`,
 // ---------- detalle: menu/<menu>/<plato>/index.html ----------
 const contacto = data.contacto?.email;
 const cta = (m) => `
-          <section class="menu-cta">
-            <p>¿No encontrás lo que te gusta?</p>
-            ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
-          </section>`;
-// Al llegar desde una flecha, la transición desliza el plato hacia el lado que corresponde.
-// Tiene que registrarse en <head>, antes del primer render.
-const CARRUSEL = `addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})`;
+        <div class="menu-cta">
+          <p>¿No encontrás lo que te gusta?</p>
+          ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
+        </div>`;
 const FLECHA = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
+
+// Cada página de plato trae el carrusel completo de su menú, arrancando en ese plato.
+// Al deslizar, menu.js actualiza la URL y el título al plato visible.
+function slide(m, p, actual, cerca) {
+  const h = p === actual ? 'h1' : 'h2';
+  return `
+          <li class="carrusel-card${p === actual ? ' is-activa' : ''}" id="${esc(p.id)}" data-titulo="${esc(`${p.nombre} · ${m.titulo} · Vonharv`)}" aria-roledescription="plato" aria-label="${esc(p.nombre)}">
+            <div class="carrusel-media"><img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}"${cerca ? '' : ' loading="lazy"'} decoding="async"></div>
+            <div class="carrusel-body">
+              <p class="carrusel-seccion">${esc(p.seccion.titulo)}</p>
+              <${h} class="carrusel-titulo">${esc(p.nombre)}</${h}>
+              <p class="carrusel-desc">${esc(p.descripcion)}</p>${p.resenas?.length ? `
+              <section class="resenas" aria-label="Reseñas de ${esc(p.nombre)}">
+                <p class="carrusel-seccion">Reseñas</p>
+                <ul>${p.resenas.map((r) => `
+                  <li>
+                    ${r.estrellas ? `<span class="resena-estrellas" role="img" aria-label="${r.estrellas} de 5 estrellas">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</span>` : ''}
+                    <blockquote>“${esc(r.texto)}”</blockquote>
+                    <p class="resena-autor">${esc(r.autor)}</p>
+                  </li>`).join('')}
+                </ul>
+              </section>` : ''}
+            </div>
+          </li>`;
+}
 
 let paginas = 0;
 for (const m of menus) {
   rmSync(new URL(`menu/${m.id}/`, root), { recursive: true, force: true });
   m.orden.forEach((p, i) => {
-    const prev = m.orden[(i - 1 + m.orden.length) % m.orden.length];
-    const next = m.orden[(i + 1) % m.orden.length];
+    const total = m.orden.length;
+    const cerca = (j) => Math.min(Math.abs(i - j), total - Math.abs(i - j)) <= 1;
     const dir = new URL(`menu/${m.id}/${p.id}/`, root);
     mkdirSync(dir, { recursive: true });
     writeFileSync(new URL('index.html', dir), pagina({
@@ -175,36 +198,31 @@ for (const m of menus) {
       descripcion: p.descripcion,
       jsonLd: { '@context': 'https://schema.org', '@type': 'MenuItem', name: p.nombre, description: p.descripcion, image: `../../../${p.imagen}` },
       volver: { href: `../../../#${p.seccion.ancla}`, texto: 'Menú', aria: 'al menú' },
-      head: `
-  <link rel="prefetch" href="../${esc(prev.id)}/">
-  <link rel="prefetch" href="../${esc(next.id)}/">
-  <script>${CARRUSEL}</script>`,
       cuerpo: `
-      <article class="detail menu-detalle">
-        <div class="menu-foto">
-          <div class="stage"><img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high"></div>
-          <p class="stage-count">${i + 1} / ${m.orden.length}</p>
+      <nav class="menu-tabs" aria-label="Tipo de menú">
+        ${menus.map((o) => `<a class="menu-tab" href="../../../#${o.id}"${o === m ? ' aria-current="page"' : ''}>${esc(o.nombre)}</a>`).join('\n        ')}
+      </nav>
+
+      <section class="carrusel" aria-roledescription="carrusel" aria-label="${esc(m.titulo)}">
+        <div class="carrusel-viewport">
+          <ul class="carrusel-pista" tabindex="0">${m.orden.map((q, j) => slide(m, q, p, cerca(j))).join('')}
+          </ul>
+          <button type="button" class="carrusel-flecha carrusel-prev" aria-label="Plato anterior">${FLECHA('M15 5l-7 7 7 7')}</button>
+          <button type="button" class="carrusel-flecha carrusel-next" aria-label="Plato siguiente">${FLECHA('M9 5l7 7-7 7')}</button>
         </div>
+        <p class="carrusel-count" aria-live="polite"><span>${i + 1}</span> / ${total}</p>
+      </section>
 
-        <div class="info">
-          <p class="eyebrow">${esc(m.nombre)} · ${esc(p.seccion.titulo)}</p>
-          <h1>${esc(p.nombre)}</h1>
-          <p class="lead">${esc(p.descripcion)}</p>
-${p.categoria === 'principales' && m.nota_principales ? `
-          <aside class="menu-nota"><strong>Nota</strong> ${esc(m.nota_principales)}</aside>
-` : ''}${cta(m)}
-
-          <nav class="pager" aria-label="Otros platos">
-            <a href="../${esc(prev.id)}/" rel="prev"><small>← Anterior</small><span>${esc(prev.nombre)}</span></a>
-            <a href="../${esc(next.id)}/" rel="next"><small>Siguiente →</small><span>${esc(next.nombre)}</span></a>
-          </nav>
-        </div>
-      </article>
-
-      <nav class="menu-flechas" aria-label="Cambiar de plato">
-        <a class="stage-nav stage-prev" href="../${esc(prev.id)}/" rel="prev" aria-label="Plato anterior: ${esc(prev.nombre)}">${FLECHA('M15 5l-7 7 7 7')}</a>
-        <a class="stage-nav stage-next" href="../${esc(next.id)}/" rel="next" aria-label="Plato siguiente: ${esc(next.nombre)}">${FLECHA('M9 5l7 7-7 7')}</a>
-      </nav>`,
+      <section class="lista" aria-label="Todos los platos del ${esc(m.titulo)}">${m.secciones.map((s) => `
+        <h2 class="cat-title">${esc(s.titulo)}</h2>
+        <ul class="lista-grid">${s.platos.map((q) => `
+          <li><a class="lista-box" href="../${esc(q.id)}/" data-id="${esc(q.id)}"${q === p ? ' aria-current="true"' : ''}>
+            <img src="../../../${esc(q.imagen)}" alt="" width="${IMG_W}" height="${IMG_H}" loading="lazy" decoding="async">
+            <span>${esc(q.nombre)}</span>
+          </a></li>`).join('')}
+        </ul>`).join('')}
+      </section>
+${cta(m)}`,
     }));
     paginas++;
   });

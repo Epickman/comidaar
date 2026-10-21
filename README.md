@@ -22,6 +22,8 @@ Todo está en `data/menu-adultos.json`: un bloque por menú (`premium`, `regular
 (`categoria`: `entradas` | `principales` | `postres`, `orden`, `nombre`, `descripcion`, `imagen`).
 Las fotos (1200×676) van en `assets/menu/`. Un menú sin platos muestra “Próximamente”.
 `contacto.email` es el destino del botón “Escribinos” de cada plato.
+Cada plato puede tener reseñas, que se muestran en su card del carrusel:
+`"resenas": [{ "autor": "María G.", "texto": "…", "estrellas": 5 }]` (`estrellas` es opcional).
 
 Después de editar el JSON, regenerá el HTML (los platos y el JSON-LD `schema.org/Menu` quedan
 escritos en la página para buscadores):

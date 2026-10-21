@@ -1,9 +1,10 @@
 /* Menú adultos: se apoya en ../styles.css (topbar, hero, chips, tipografías). */
 body[data-view="menu"] .topbar-back { visibility: visible; opacity: 1; }
 html { scroll-behavior: smooth; }
-.menu-section { scroll-margin-top: calc(var(--header-h) + 72px); }
+.menu-section { scroll-margin-top: calc(var(--header-h) + var(--tabs-h, 57px) + 72px); }
 
 /* ---------- navegación entre secciones ---------- */
+.menu-nav { top: calc(var(--header-h) + var(--tabs-h, 57px)); }
 .menu-nav .chip { display: inline-block; }
 .menu-nav .chip[aria-current="true"] { background: var(--text); border-color: var(--text); color: var(--accent-ink); font-weight: 500; }
 
@@ -37,72 +38,80 @@ html { scroll-behavior: smooth; }
   display: block; margin-bottom: 6px; font: normal 400 .66rem var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--muted);
 }
 
-/* ---------- detalle del plato (sobre .detail/.stage/.info de ../styles.css) ---------- */
-.menu-detalle .menu-foto { align-self: start; }
-.menu-detalle .stage { aspect-ratio: 16 / 9; height: auto; position: relative; top: auto; background: var(--surface-2); }
-@media (min-width: 960px) { .menu-detalle .menu-foto { position: sticky; top: calc(var(--header-h) + 28px); } }
-.menu-detalle .stage img { object-fit: cover; padding: 0; }
-.menu-detalle .info h1 { margin-bottom: 0; }
-.menu-detalle .menu-nota { margin-top: 28px; }
-.menu-cta {
-  margin-top: 36px; padding: 26px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
-}
-.menu-cta p { margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(1.2rem, 1.7vw, 1.45rem); line-height: 1.4; }
-.menu-cta-btn {
-  padding: 12px 26px; border-radius: 100px; border: 1px solid var(--text); background: var(--text); color: var(--accent-ink);
-  font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; transition: background .3s ease, color .3s ease;
-}
-.menu-cta-btn:hover { background: transparent; color: var(--text); }
-
 /* ---------- pestañas Premium / Tradicional ---------- */
-.menu-tabs { display: flex; justify-content: center; margin: 8px 0 0; border-bottom: 1px solid var(--line); }
+/* fija debajo del header al scrollear */
+.menu-tabs { position: sticky; top: var(--header-h); z-index: 11; display: flex; justify-content: center; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
 .menu-tab {
   padding: 14px clamp(18px, 4vw, 36px); background: none; border: 0; border-bottom: 1px solid transparent; margin-bottom: -1px;
   font-family: var(--serif); font-size: clamp(1.15rem, 2.4vw, 1.5rem); font-weight: 400; color: var(--muted);
   transition: color .3s ease, border-color .3s ease;
 }
 .menu-tab:hover { color: var(--text); }
-.menu-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
+.menu-tab { display: inline-block; }
+.menu-tab[aria-selected="true"], .menu-tab[aria-current="page"] { color: var(--text); border-bottom-color: var(--text); }
 .menu-panel[hidden] { display: none; }
 .menu-vacio { margin: 64px 0 24px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--muted); }
 
-/* ---------- carrusel en el detalle: flechas a los lados de la página ---------- */
-main:has(.menu-detalle) { position: relative; }
-.stage-nav {
-  position: absolute; z-index: 15; display: grid; place-items: center;
-  width: 44px; height: 44px; border-radius: 50%;
-  /* en mobile, a la altura del centro de la foto (16:9 a todo el ancho) */
-  top: calc(100vw * 9 / 32 - 22px);
-  background: rgba(5, 5, 5, .55); border: 1px solid var(--line); color: var(--text);
+/* ---------- carrusel de platos ---------- */
+.carrusel { --card-w: min(84vw, 620px); padding: clamp(28px, 5vw, 56px) 0 0; text-align: center; scroll-margin-top: calc(var(--header-h) + var(--tabs-h, 57px)); }
+@media (min-width: 960px) { .carrusel { --card-w: min(46vw, 620px); } }
+/* a todo el ancho de la ventana, para que asomen las cards vecinas */
+.carrusel-viewport { position: relative; width: 100vw; margin-left: calc(50% - 50vw); }
+.carrusel-pista {
+  list-style: none; margin: 0; padding: 8px calc((100vw - var(--card-w)) / 2) 12px;
+  display: flex; gap: clamp(14px, 2.4vw, 28px); align-items: flex-start;
+  overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.carrusel-pista::-webkit-scrollbar { display: none; }
+.carrusel-pista:focus-visible { outline: none; }
+.carrusel-pista:focus-visible .is-activa { outline: 2px solid var(--accent); outline-offset: 4px; }
+.carrusel-card {
+  flex: none; width: var(--card-w); scroll-snap-align: center; scroll-snap-stop: always; text-align: left;
+  background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden;
+  opacity: .38; transform: scale(.94);
+  transition: opacity .5s var(--ease), transform .5s var(--ease), border-color .5s var(--ease);
+}
+.carrusel-card.is-activa { opacity: 1; transform: none; border-color: var(--line); }
+.carrusel-media { aspect-ratio: 16 / 9; background: var(--surface-2); }
+.carrusel-media img { width: 100%; height: 100%; object-fit: cover; }
+.carrusel-body { padding: 24px clamp(20px, 3vw, 32px) 30px; border-top: 1px solid var(--line-soft); }
+.carrusel-seccion { margin: 0 0 10px; font-size: .66rem; letter-spacing: .32em; text-transform: uppercase; color: var(--muted); }
+.carrusel-titulo { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.12; text-wrap: balance; }
+.carrusel-desc { margin: 14px 0 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
+.resenas { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
+.resenas ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 18px; }
+.resenas blockquote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.08rem; line-height: 1.5; }
+.resena-estrellas { display: block; margin-bottom: 6px; font-size: .8rem; letter-spacing: .2em; color: var(--text); }
+.resena-autor { margin: 6px 0 0; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+
+.carrusel-flecha {
+  position: absolute; z-index: 2; top: calc(8px + var(--card-w) * 9 / 32); margin-top: -24px;
+  display: grid; place-items: center; width: 48px; height: 48px; padding: 0; border-radius: 50%;
+  background: rgba(5, 5, 5, .6); border: 1px solid var(--line); color: var(--text);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   transition: background .3s ease, border-color .3s ease;
 }
-.stage-nav:hover { background: rgba(5, 5, 5, .85); border-color: var(--text); }
-.stage-nav svg { width: 22px; height: 22px; }
-.stage-prev { left: 10px; }
-.stage-next { right: 10px; }
-/* en desktop, fijas a los costados del contenido y centradas en la pantalla */
-@media (min-width: 960px) {
-  main:has(.menu-detalle) { padding-left: 92px; padding-right: 92px; }
-  .stage-nav { position: fixed; top: 50%; width: 52px; height: 52px; margin-top: -26px; }
-  .stage-prev { left: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
-  .stage-next { right: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
-}
-.stage-count { margin: 14px 0 0; text-align: center; font-size: .7rem; letter-spacing: .2em; color: var(--muted); font-variant-numeric: tabular-nums; }
-.menu-detalle .stage { touch-action: pan-y; }
+.carrusel-flecha:hover { background: rgba(5, 5, 5, .9); border-color: var(--text); }
+.carrusel-flecha svg { width: 22px; height: 22px; }
+.carrusel-prev { left: max(10px, calc(50vw - var(--card-w) / 2 - 76px)); }
+.carrusel-next { right: max(10px, calc(50vw - var(--card-w) / 2 - 76px)); }
 
-/* deslizamiento entre platos (navegadores con View Transitions entre páginas) */
-@view-transition { navigation: auto; }
-.menu-detalle { view-transition-name: plato; }
-::view-transition-old(root), ::view-transition-new(root) { animation: none; }
-html:active-view-transition-type(siguiente)::view-transition-old(plato) { animation: .45s var(--ease) both carrusel-salir-izq; }
-html:active-view-transition-type(siguiente)::view-transition-new(plato) { animation: .45s var(--ease) both carrusel-entrar-der; }
-html:active-view-transition-type(anterior)::view-transition-old(plato) { animation: .45s var(--ease) both carrusel-salir-der; }
-html:active-view-transition-type(anterior)::view-transition-new(plato) { animation: .45s var(--ease) both carrusel-entrar-izq; }
-@keyframes carrusel-salir-izq { to { transform: translateX(-10%); opacity: 0; } }
-@keyframes carrusel-salir-der { to { transform: translateX(10%); opacity: 0; } }
-@keyframes carrusel-entrar-der { from { transform: translateX(10%); opacity: 0; } }
-@keyframes carrusel-entrar-izq { from { transform: translateX(-10%); opacity: 0; } }
-/* al pasar de plato no se repite la entrada suave de la página */
-html.carrusel .menu-detalle :is(.stage, .info > *) { animation: none; }
+.carrusel-count { margin: 28px 0 0; font-size: .72rem; letter-spacing: .24em; color: var(--muted); font-variant-numeric: tabular-nums; }
+.carrusel-count span { color: var(--text); }
+
+/* ---------- listado de platos debajo del carrusel ---------- */
+.lista { margin-top: clamp(24px, 4vw, 40px); }
+.lista-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media (min-width: 640px) { .lista-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (min-width: 1024px) { .lista-grid { grid-template-columns: repeat(4, 1fr); } }
+.lista-box {
+  display: flex; flex-direction: column; height: 100%;
+  background: var(--surface); border: 1px solid var(--line-soft); border-radius: var(--radius); overflow: hidden;
+  transition: border-color .4s var(--ease);
+}
+.lista-box:hover { border-color: var(--line); }
+.lista-box[aria-current="true"] { border-color: var(--text); }
+.lista-box img { width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; background: var(--surface-2); }
+.lista-box span { padding: 12px 14px 14px; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
+.carrusel ~ .menu-cta { max-width: 620px; margin: 48px auto 0; padding: 24px 0; justify-content: center; text-align: center; }
