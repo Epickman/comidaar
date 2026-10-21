@@ -219,10 +219,7 @@
         bloques.forEach((b) => {
           const lista = result.filter((r) => r.plato === b.dataset.plato);
           if (!lista.length) return;
-          const promedio = lista.reduce((t, r) => t + r.estrellas, 0) / lista.length;
           b.querySelector('.resenas-contenido').innerHTML = `
-            <p class="resenas-resumen"><span class="resena-estrellas" aria-hidden="true">${estrellas(Math.round(promedio))}</span>
-              <span>${promedio.toFixed(1).replace('.', ',')} · ${lista.length === 1 ? '1 reseña' : `${lista.length} reseñas`}</span></p>
             <div class="resenas-carrusel" role="region" aria-roledescription="carrusel" aria-label="Reseñas">
               <ul class="resenas-pista">${lista.map((r, i) => `
                 <li aria-roledescription="reseña" aria-label="${i + 1} de ${lista.length}">

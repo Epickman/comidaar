@@ -116,7 +116,7 @@ html { scroll-behavior: smooth; }
 .resenas .carrusel-seccion { margin-bottom: 12px; }
 .resenas-vacio { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--muted); }
 .resenas-pista {
-  list-style: none; margin: 14px 0 0; padding: 0;
+  list-style: none; margin: 0; padding: 0;
   display: flex; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain;
   scrollbar-width: none;
 }
@@ -132,9 +132,7 @@ html { scroll-behavior: smooth; }
 .resenas-controles button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .resenas-count { font-size: .72rem; letter-spacing: .12em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .resenas blockquote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.08rem; line-height: 1.5; }
-.resenas-resumen { margin: 0; display: flex; align-items: center; gap: 12px; font-size: .78rem; letter-spacing: .08em; color: var(--muted); }
 .resena-estrellas { display: block; margin-bottom: 6px; font-size: .8rem; letter-spacing: .2em; color: var(--text); }
-.resenas-resumen .resena-estrellas { margin: 0; font-size: 1rem; }
 .resena-autor { margin: 6px 0 0; font-size: .72rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
 
 /* formulario "Dejá tu reseña" */
