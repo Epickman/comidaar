@@ -184,21 +184,42 @@
       const numero = caja.querySelector('.resenas-count span');
       if (!numero) return;
       let actual = 0;
-      const ir = (i) => {
+      const ir = (i, behavior) => {
         const j = (i + items.length) % items.length;
-        pista.scrollTo({ left: items[j].offsetLeft - items[0].offsetLeft, behavior: i === j ? 'smooth' : 'instant' });
+        pista.scrollTo({ left: items[j].offsetLeft - items[0].offsetLeft, behavior: behavior || (i === j ? 'smooth' : 'instant') });
       };
       pista.addEventListener('scroll', () => {
         const i = Math.round(pista.scrollLeft / pista.clientWidth);
         if (i !== actual && items[i]) numero.textContent = (actual = i) + 1;
       }, { passive: true });
-      caja.querySelector('.resenas-prev').addEventListener('click', () => ir(actual - 1));
-      caja.querySelector('.resenas-next').addEventListener('click', () => ir(actual + 1));
+
+      // se pasan solas cada unos segundos, salvo que la persona esté leyendo o usando el carrusel
+      const card = caja.closest('.carrusel-card');
+      let pausa = false;
+      let reloj;
+      const programar = () => {
+        clearInterval(reloj);
+        if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        reloj = setInterval(() => {
+          if (pausa || document.hidden || (card && !card.classList.contains('is-activa'))) return;
+          ir(actual + 1, 'smooth');
+        }, 5000);
+      };
+      caja.addEventListener('pointerenter', () => (pausa = true));
+      caja.addEventListener('pointerleave', () => (pausa = false));
+      caja.addEventListener('focusin', () => (pausa = true));
+      caja.addEventListener('focusout', () => (pausa = false));
+      pista.addEventListener('touchstart', programar, { passive: true });
+      programar();
+
+      const manual = (i) => { ir(i); programar(); };
+      caja.querySelector('.resenas-prev').addEventListener('click', () => manual(actual - 1));
+      caja.querySelector('.resenas-next').addEventListener('click', () => manual(actual + 1));
       caja.addEventListener('keydown', (e) => {
         if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
         e.preventDefault();
         e.stopPropagation(); // no mover el carrusel de platos
-        ir(actual + (e.key === 'ArrowRight' ? 1 : -1));
+        manual(actual + (e.key === 'ArrowRight' ? 1 : -1));
       });
     }
 
