@@ -152,7 +152,6 @@ writeFileSync(new URL('index.html', root), pagina({
     <section class="hero">
       <p class="eyebrow">La carta de Vonharv</p>
       <h1>Nuestra cocina, <em>en detalle</em>.</h1>
-      <p>Elegí un plato para conocer sus ingredientes, alérgenos y el vino que lo acompaña.</p>
     </section>
 
     <div class="buscador" role="search">
