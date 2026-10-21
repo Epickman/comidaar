@@ -252,7 +252,8 @@ for (const m of menus) {
         <ul class="lista-grid">${s.platos.map((q) => `
           <li><a class="lista-box" href="../${esc(q.id)}/" data-id="${esc(q.id)}"${q === p ? ' aria-current="true"' : ''}>
             <img src="../../../${esc(q.imagen)}" alt="" width="${IMG_W}" height="${IMG_H}" loading="lazy" decoding="async">
-            <span>${esc(q.nombre)}</span>
+            <span class="lista-nombre">${esc(q.nombre)}</span>
+            <span class="lista-resenas" data-plato="${esc(q.id)}">Sin reseñas</span>
           </a></li>`).join('')}
         </ul>`).join('')}
       </section>

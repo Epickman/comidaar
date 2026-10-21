@@ -54,7 +54,9 @@ html { scroll-behavior: smooth; }
 /* fijas debajo del header al scrollear */
 .menu-tabs { position: sticky; top: var(--header-h); z-index: 11; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
 .menu-tabs-fila { display: flex; justify-content: center; }
-.menu-tabs-fila .menu-tab { margin-bottom: 0; }
+.menu-tabs-fila .menu-tab { margin-bottom: 0; display: flex; align-items: center; justify-content: center; }
+/* las barras fijas tapan de lado a lado: si no, el carrusel (a todo el ancho) asoma a los costados */
+.menu-tabs, .menu-nav { box-shadow: 0 0 0 100vmax var(--bg); clip-path: inset(0 -100vmax); }
 /* en mobile las tres pestañas se reparten el ancho (con aire a los costados) y el texto puede ir en dos líneas */
 @media (max-width: 560px) {
   .menu-tabs-fila { gap: 6px; padding: 0 6px; }
@@ -185,7 +187,9 @@ html { scroll-behavior: smooth; }
 .lista-box:hover { border-color: var(--line); }
 .lista-box[aria-current="true"] { border-color: var(--text); }
 .lista-box img { width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; background: var(--surface-2); }
-.lista-box span { padding: 12px 14px 14px; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
+.lista-nombre { padding: 12px 14px 0; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
+.lista-resenas { margin-top: auto; padding: 8px 14px 14px; font-size: .7rem; letter-spacing: .06em; color: var(--muted); }
+.lista-resenas .resena-estrellas { display: inline; margin: 0 6px 0 0; font-size: .72rem; letter-spacing: .12em; }
 .carrusel ~ .menu-cta { max-width: 620px; margin: 48px auto 0; }
 
 /* ---------- buscador ---------- */

@@ -183,6 +183,14 @@
     fetch(`https://${proyecto}.apicdn.sanity.io/v2026-10-21/data/query/${dataset}?${params}`)
       .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
       .then(({ result }) => {
+        // puntaje en los boxes del listado
+        document.querySelectorAll('.lista-resenas[data-plato]').forEach((el) => {
+          const lista = result.filter((r) => r.plato === el.dataset.plato);
+          if (!lista.length) return;
+          const promedio = lista.reduce((t, r) => t + r.estrellas, 0) / lista.length;
+          el.innerHTML = `<span class="resena-estrellas" aria-hidden="true">${estrellas(Math.round(promedio))}</span>${promedio.toFixed(1).replace('.', ',')} (${lista.length})`;
+          el.setAttribute('aria-label', `${promedio.toFixed(1)} de 5 estrellas, ${lista.length === 1 ? '1 reseña' : `${lista.length} reseñas`}`);
+        });
         bloques.forEach((b) => {
           const lista = result.filter((r) => r.plato === b.dataset.plato);
           if (!lista.length) return;
