@@ -3,6 +3,11 @@
   "contacto": {
     "email": "contacto@vonharv.com"
   },
+  "resenas": {
+    "projectId": "s39xep1q",
+    "dataset": "production",
+    "endpoint": "/api/resenas"
+  },
   "menus": [
     {
       "id": "adultos-premium",

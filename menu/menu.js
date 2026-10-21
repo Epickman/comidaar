@@ -150,9 +150,14 @@
     document.querySelector('.carrusel-prev').addEventListener('click', () => ir(activa - 1));
     document.querySelector('.carrusel-next').addEventListener('click', () => ir(activa + 1));
     // tocar una card vecina la trae al centro
-    cards.forEach((c, j) => c.addEventListener('click', () => { if (j !== activa) ir(j); }));
+    cards.forEach((c, j) => c.addEventListener('click', (e) => {
+      if (j === activa) return;
+      e.preventDefault();
+      ir(j);
+    }));
     addEventListener('keydown', (e) => {
       if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.target.closest('input, textarea, select, [contenteditable]')) return; // escribiendo una reseña
       if (e.key === 'ArrowLeft') { e.preventDefault(); ir(activa - 1); }
       if (e.key === 'ArrowRight') { e.preventDefault(); ir(activa + 1); }
     });
@@ -163,6 +168,62 @@
       e.preventDefault();
       ir(cards.findIndex((c) => c.id === b.dataset.id));
       document.querySelector('.carrusel').scrollIntoView({ behavior: 'smooth' });
+    }));
+  }
+  // ---------- reseñas: se leen las aprobadas desde Sanity y el formulario las envía a /api/resenas ----------
+  const carrusel = document.querySelector('.carrusel[data-resenas-proyecto]');
+  if (carrusel) {
+    const { resenasProyecto: proyecto, resenasDataset: dataset, resenasEnvio: envio } = carrusel.dataset;
+    const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const estrellas = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
+
+    const bloques = [...document.querySelectorAll('.resenas[data-plato]')];
+    const query = '*[_type == "resena" && plato in $platos] | order(_createdAt desc){ plato, autor, estrellas, texto }';
+    const params = new URLSearchParams({ query, $platos: JSON.stringify(bloques.map((b) => b.dataset.plato)) });
+    fetch(`https://${proyecto}.apicdn.sanity.io/v2026-10-21/data/query/${dataset}?${params}`)
+      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
+      .then(({ result }) => {
+        bloques.forEach((b) => {
+          const lista = result.filter((r) => r.plato === b.dataset.plato);
+          if (!lista.length) return;
+          const promedio = lista.reduce((t, r) => t + r.estrellas, 0) / lista.length;
+          b.innerHTML = `
+            <p class="resenas-resumen"><span class="resena-estrellas" aria-hidden="true">${estrellas(Math.round(promedio))}</span>
+              <span>${promedio.toFixed(1).replace('.', ',')} · ${lista.length === 1 ? '1 reseña' : `${lista.length} reseñas`}</span></p>
+            <ul>${lista.map((r) => `
+              <li>
+                <span class="resena-estrellas" role="img" aria-label="${r.estrellas} de 5 estrellas">${estrellas(r.estrellas)}</span>
+                <blockquote>“${esc(r.texto)}”</blockquote>
+                <p class="resena-autor">${esc(r.autor)}</p>
+              </li>`).join('')}
+            </ul>`;
+          b.hidden = false;
+        });
+      })
+      .catch(() => {}); // sin reseñas visibles si Sanity no responde
+
+    document.querySelectorAll('.resena-form').forEach((form) => form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msj = form.querySelector('.resena-msj');
+      const boton = form.querySelector('button[type="submit"]');
+      const datos = Object.fromEntries(new FormData(form));
+      boton.disabled = true;
+      msj.textContent = 'Enviando…';
+      try {
+        const r = await fetch(envio, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...datos, plato: form.dataset.plato, estrellas: Number(datos.estrellas) }),
+        });
+        const res = await r.json().catch(() => ({}));
+        if (!r.ok) throw new Error(res.error);
+        form.reset();
+        msj.textContent = '¡Gracias! Vamos a publicar tu reseña cuando la revisemos.';
+      } catch (err) {
+        msj.textContent = err.message || 'No pudimos enviar la reseña. Probá de nuevo más tarde.';
+      } finally {
+        boton.disabled = false;
+      }
     }));
   }
 })();

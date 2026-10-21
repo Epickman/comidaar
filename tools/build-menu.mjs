@@ -9,7 +9,7 @@
 // Cada menú tiene su pestaña (`nombre`) y sus platos
 // (categoria: entradas | principales | postres); uno sin platos muestra
 // "Próximamente". `contacto.email` es el destino del botón "Escribinos" del detalle.
-// Reseñas (opcional, por plato): "resenas": [{ "autor": "…", "texto": "…", "estrellas": 5 }]
+// `resenas` apunta al proyecto de Sanity donde se guardan y moderan las reseñas (ver studio/ y api/resenas.mjs).
 import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
@@ -182,17 +182,22 @@ function slide(m, p, actual, cerca) {
             <div class="carrusel-body">
               <p class="carrusel-seccion">${esc(p.seccion.titulo)}</p>
               <${h} class="carrusel-titulo">${esc(p.nombre)}</${h}>
-              <p class="carrusel-desc">${esc(p.descripcion)}</p>${p.resenas?.length ? `
-              <section class="resenas" aria-label="Reseñas de ${esc(p.nombre)}">
-                <p class="carrusel-seccion">Reseñas</p>
-                <ul>${p.resenas.map((r) => `
-                  <li>
-                    ${r.estrellas ? `<span class="resena-estrellas" role="img" aria-label="${r.estrellas} de 5 estrellas">${'★'.repeat(r.estrellas)}${'☆'.repeat(5 - r.estrellas)}</span>` : ''}
-                    <blockquote>“${esc(r.texto)}”</blockquote>
-                    <p class="resena-autor">${esc(r.autor)}</p>
-                  </li>`).join('')}
-                </ul>
-              </section>` : ''}
+              <p class="carrusel-desc">${esc(p.descripcion)}</p>
+              <section class="resenas" data-plato="${esc(p.id)}" aria-label="Reseñas de ${esc(p.nombre)}" hidden></section>
+              <details class="resena-nueva">
+                <summary>Dejá tu reseña</summary>
+                <form class="resena-form" data-plato="${esc(p.id)}">
+                  <fieldset class="resena-puntaje">
+                    <legend>Tu puntaje</legend>
+                    ${[1, 2, 3, 4, 5].map((n) => `<label><input type="radio" name="estrellas" value="${n}" required><span aria-hidden="true">★</span><span class="sr-only">${n} ${n === 1 ? 'estrella' : 'estrellas'}</span></label>`).join('')}
+                  </fieldset>
+                  <label class="resena-campo">Nombre<input name="autor" maxlength="60" autocomplete="given-name" required></label>
+                  <label class="resena-campo">Comentario<textarea name="texto" rows="3" maxlength="600" required></textarea></label>
+                  <label class="resena-trampa" aria-hidden="true">Web<input name="web" tabindex="-1" autocomplete="off"></label>
+                  <button type="submit" class="menu-cta-btn">Enviar reseña</button>
+                  <p class="resena-msj" role="status"></p>
+                </form>
+              </details>
             </div>
           </li>`;
 }
@@ -201,6 +206,11 @@ function slide(m, p, actual, cerca) {
 for (const d of readdirSync(new URL('menu/', root), { withFileTypes: true })) {
   if (d.isDirectory()) rmSync(new URL(`menu/${d.name}/`, root), { recursive: true });
 }
+
+// Las reseñas aprobadas se leen en vivo desde Sanity (menu.js); el formulario las envía a la función.
+const RESENAS = data.resenas
+  ? ` data-resenas-proyecto="${esc(data.resenas.projectId)}" data-resenas-dataset="${esc(data.resenas.dataset)}" data-resenas-envio="${esc(data.resenas.endpoint)}"`
+  : '';
 
 let paginas = 0;
 for (const m of menus) {
@@ -223,7 +233,7 @@ for (const m of menus) {
         </div>
       </nav>
 
-      <section class="carrusel" aria-roledescription="carrusel" aria-label="${esc(m.titulo)}">
+      <section class="carrusel" aria-roledescription="carrusel" aria-label="${esc(m.titulo)}"${RESENAS}>
         <div class="carrusel-viewport">
           <ul class="carrusel-pista" tabindex="0">${m.orden.map((q, j) => slide(m, q, p, cerca(j))).join('')}
           </ul>
