@@ -380,11 +380,14 @@
       ]
     },
     {
-      "id": "tradicional",
-      "nombre": "Tradicional",
-      "titulo": "Menú adultos tradicional",
+      "id": "regular",
+      "nombre": "Regular",
+      "titulo": "Menú adultos regular",
       "nota_principales": null,
       "platos": []
     }
-  ]
+  ],
+  "contacto": {
+    "url": ""
+  }
 }

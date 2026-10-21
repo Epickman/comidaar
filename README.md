@@ -1,9 +1,10 @@
-# Vonharv · Carta
+# Vonharv · Menú adultos
 
-Carta web de platos con la estética de [vonharv.com](https://vonharv.com): foto, descripción,
-ingredientes, alérgenos, maridaje y nota de cocina de cada plato.
+Menú web de Vonharv con la estética de [vonharv.com](https://vonharv.com). Al entrar se ve el menú,
+con pestañas **Premium** y **Regular**, cada una dividida en platos de entrada, principales y postres.
+Tocando un plato se abre su página con foto, descripción y anterior/siguiente.
 
-Es un sitio estático (HTML/CSS/JS), sin build ni dependencias.
+Es un sitio estático (HTML/CSS/JS), sin dependencias.
 
 ## Probarlo
 
@@ -15,31 +16,27 @@ python3 -m http.server 5180
 
 Para publicarlo sirve tal cual en Vercel, Netlify o GitHub Pages.
 
-## Cambiar la carta
+## Cambiar el menú
 
-Todo está en `data/platos.js`: nombre, precio, descripción, ingredientes, alérgenos,
-maridaje, nota de cocina y foto.
+Todo está en `data/menu-adultos.json`: un bloque por menú (`premium`, `regular`) con sus platos
+(`categoria`: `entradas` | `principales` | `postres`, `orden`, `nombre`, `descripcion`, `imagen`).
+Las fotos (1200×676) van en `assets/menu/`. Un menú sin platos muestra “Próximamente”.
+`contacto.url` es el destino del botón “Escribinos” de cada plato.
 
-Si un plato no tiene `foto`, se muestra “Foto próximamente”. Lo ideal es un PNG/WebP con
-fondo transparente en `assets/`; si la foto es un plato visto desde arriba con fondo,
-agregá `fotoRecorte: 'circulo'` para recortarlo al plato.
-
-## Menú adultos (`/menu/`)
-
-Página aparte con pestañas **Premium** (41 platos) y **Tradicional** (por ahora vacío: muestra
-“Próximamente”). Los datos están en `data/menu-adultos.json`, un bloque por menú, y las fotos (1200×676) en `assets/menu/`. El HTML se genera
-desde el JSON para que los platos y el JSON-LD (`schema.org/Menu`) queden en la página:
+Después de editar el JSON, regenerá el HTML (los platos y el JSON-LD `schema.org/Menu` quedan
+escritos en la página para buscadores):
 
 ```bash
-node tools/build-menu.mjs   # reescribe menu/index.html
+node tools/build-menu.mjs   # reescribe index.html y menu/<menu>/<plato>/
 ```
 
 ## Archivos
 
 | | |
 |---|---|
-| `index.html`, `styles.css`, `app.js` | el sitio |
-| `data/platos.js` | la carta |
-| `menu/`, `data/menu-adultos.json`, `assets/menu/` | el menú adultos |
-| `tools/build-menu.mjs` | genera `menu/index.html` |
-| `assets/` | logo y fotos |
+| `index.html` | inicio con el menú (generado) |
+| `menu/<menu>/<plato>/` | página de cada plato (generadas) |
+| `styles.css`, `menu/menu.css`, `menu/menu.js` | estilos y comportamiento |
+| `data/menu-adultos.json` | el menú |
+| `assets/menu/` | fotos de los platos |
+| `tools/build-menu.mjs` | genera el HTML desde el JSON |

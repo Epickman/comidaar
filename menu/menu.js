@@ -63,29 +63,4 @@
   }, { rootMargin: '-35% 0px -55% 0px' });
   secciones.forEach((s) => io.observe(s));
 
-  // ---------- modal del plato ----------
-  const modal = document.getElementById('menu-modal');
-  const img = modal.querySelector('.menu-modal-media img');
-  const titulo = modal.querySelector('h2');
-  const desc = modal.querySelector('.menu-modal-body p');
-  let card = null;
-
-  function abrir(c) {
-    card = c;
-    const foto = c.querySelector('img');
-    img.src = foto.currentSrc || foto.src;
-    img.alt = foto.alt;
-    titulo.textContent = c.querySelector('.menu-card-title').textContent;
-    desc.textContent = c.querySelector('.menu-card-desc').textContent;
-    modal.showModal();
-  }
-
-  function cerrar() { modal.close(); }
-
-  modal.addEventListener('close', () => card?.focus());
-  modal.querySelector('.menu-modal-close').addEventListener('click', cerrar);
-  // click en el fondo (fuera del contenido del diálogo)
-  modal.addEventListener('click', (e) => { if (e.target === modal) cerrar(); });
-
-  document.querySelectorAll('.menu-card').forEach((c) => c.addEventListener('click', () => abrir(c)));
 })();
