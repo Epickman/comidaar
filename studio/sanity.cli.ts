@@ -4,4 +4,5 @@ export default defineCliConfig({
   api: {projectId: 's39xep1q', dataset: 'production'},
   // npm run deploy publica el Studio en https://vonharv.sanity.studio
   studioHost: 'vonharv',
+  deployment: {appId: 'ge7prk3ndg2tyxj6ww1jkcbw'},
 })
