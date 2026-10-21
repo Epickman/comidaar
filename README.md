@@ -1,8 +1,9 @@
-# Vonharv · Menú adultos
+# Vonharv · Menú
 
 Menú web de Vonharv con la estética de [vonharv.com](https://vonharv.com). Al entrar se ve el menú,
-con pestañas **Premium** y **Regular**, cada una dividida en platos de entrada, principales y postres.
-Tocando un plato se abre su página con foto, descripción y anterior/siguiente.
+con dos filas de pestañas: público (**Adultos** / **Adolescentes**) y tipo (**Premium** / **Regular**).
+Cada menú se divide en platos de entrada, principales y postres, y tiene un buscador. Tocando un plato
+se abre un carrusel con todas las cards del menú y, debajo, el listado de platos.
 
 Es un sitio estático (HTML/CSS/JS), sin dependencias.
 
@@ -18,7 +19,8 @@ Para publicarlo sirve tal cual en Vercel, Netlify o GitHub Pages.
 
 ## Cambiar el menú
 
-Todo está en `data/menu-adultos.json`: un bloque por menú (`premium`, `regular`) con sus platos
+Todo está en `data/menu.json`: `publicos` y `tipos` definen las pestañas, y hay un bloque por menú
+(`id` = `<publico>-<tipo>`, por ejemplo `adultos-premium`) con sus platos
 (`categoria`: `entradas` | `principales` | `postres`, `orden`, `nombre`, `descripcion`, `imagen`).
 Las fotos (1200×676) van en `assets/menu/`. Un menú sin platos muestra “Próximamente”.
 `contacto.email` es el destino del botón “Escribinos” de cada plato.
@@ -39,6 +41,6 @@ node tools/build-menu.mjs   # reescribe index.html y menu/<menu>/<plato>/
 | `index.html` | inicio con el menú (generado) |
 | `menu/<menu>/<plato>/` | página de cada plato (generadas) |
 | `styles.css`, `menu/menu.css`, `menu/menu.js` | estilos y comportamiento |
-| `data/menu-adultos.json` | el menú |
+| `data/menu.json` | el menú |
 | `assets/menu/` | fotos de los platos |
 | `tools/build-menu.mjs` | genera el HTML desde el JSON |

@@ -1,18 +1,19 @@
-// Genera el sitio a partir de data/menu-adultos.json:
-//   index.html                     inicio: pestañas por menú (premium, regular) con la grilla de platos
+// Genera el sitio a partir de data/menu.json:
+//   index.html                     inicio: pestañas por público (adultos, adolescentes) y tipo
+//                                  (premium, regular) con la grilla de platos de cada menú
 //   menu/<menu>/<plato>/index.html detalle de cada plato
 // Los platos y el JSON-LD quedan en el HTML (sin depender de JS) para buscadores.
 //
 //   node tools/build-menu.mjs
 //
-// Hay un menú por tipo (premium, regular); cada uno con sus platos
+// Hay un menú por combinación de público y tipo (id "<publico>-<tipo>"); cada uno con sus platos
 // (categoria: entradas | principales | postres); uno sin platos muestra
 // "Próximamente". `contacto.email` es el destino del botón "Escribinos" del detalle.
 // Reseñas (opcional, por plato): "resenas": [{ "autor": "…", "texto": "…", "estrellas": 5 }]
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
-const data = JSON.parse(readFileSync(new URL('data/menu-adultos.json', root), 'utf8'));
+const data = JSON.parse(readFileSync(new URL('data/menu.json', root), 'utf8'));
 
 const SECCIONES = [
   { id: 'entradas', titulo: 'Platos de entrada' },
@@ -22,7 +23,7 @@ const SECCIONES = [
 const IMG_W = 1200;
 const IMG_H = 676;
 const EAGER = 3; // las primeras fotos no se cargan en diferido
-const DESCRIPCION = 'Menú adultos de Vonharv, Premium y Regular: platos de entrada, principales y postres, con foto y descripción de cada plato.';
+const DESCRIPCION = 'Menú de Vonharv para adultos y adolescentes, Premium y Regular: platos de entrada, principales y postres, con foto y descripción de cada plato.';
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ld = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -39,7 +40,7 @@ const menus = data.menus.map((m) => {
 // Esqueleto común. `base` es la ruta relativa a la raíz del sitio; `menuBase`, a la carpeta menu/.
 function pagina({ base, menuBase, titulo, descripcion, jsonLd, volver, cuerpo, head = '' }) {
   return `<!doctype html>
-<!-- Generado por tools/build-menu.mjs a partir de data/menu-adultos.json. No editar a mano. -->
+<!-- Generado por tools/build-menu.mjs a partir de data/menu.json. No editar a mano. -->
 <html lang="es">
 <head>
   <meta charset="utf-8">
@@ -90,6 +91,12 @@ const cta = (m) => `
           ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
         </div>`;
 
+// dos filas de pestañas: público arriba, tipo abajo
+const GRUPOS = [
+  { id: 'publico', lista: 'publicos', etiqueta: 'Público' },
+  { id: 'tipo', lista: 'tipos', etiqueta: 'Tipo de menú' },
+];
+
 // ---------- inicio: index.html ----------
 let n = 0;
 function card(m, p) {
@@ -108,7 +115,7 @@ function card(m, p) {
 
 function panel(m, i) {
   const contenido = m.secciones.length ? `
-      <nav class="filters menu-nav" aria-label="Secciones del menú ${esc(m.nombre)}">
+      <nav class="filters menu-nav" aria-label="Secciones del ${esc(m.titulo)}">
         ${m.secciones.map((s) => `<a class="chip" href="#${s.ancla}">${esc(s.titulo)}</a>`).join('\n        ')}
       </nav>
 ${m.secciones.map((s) => `
@@ -123,7 +130,7 @@ ${m.secciones.map((s) => `
       </div>` : `
       <p class="menu-vacio">Próximamente.</p>`;
   return `
-    <div class="menu-panel" id="${m.id}" role="tabpanel" aria-labelledby="tab-${m.id}"${i ? ' hidden' : ''}>${contenido}
+    <div class="menu-panel" id="${m.id}" role="tabpanel" aria-label="${esc(m.titulo)}" data-publico="${m.publico}" data-tipo="${m.tipo}"${i ? ' hidden' : ''}>${contenido}
     </div>`;
 }
 
@@ -160,8 +167,10 @@ writeFileSync(new URL('index.html', root), pagina({
       <p class="buscador-estado" aria-live="polite"></p>
     </div>
 
-    <div class="menu-tabs" role="tablist" aria-label="Tipo de menú">
-      ${menus.map((m, i) => `<button type="button" class="menu-tab" role="tab" id="tab-${m.id}" aria-controls="${m.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(m.nombre)}</button>`).join('\n      ')}
+    <div class="menu-tabs">${GRUPOS.map((g) => `
+      <div class="menu-tabs-fila menu-tabs-${g.id}" role="tablist" aria-label="${g.etiqueta}" data-grupo="${g.id}">
+        ${data[g.lista].map((o, i) => `<button type="button" class="menu-tab" role="tab" data-valor="${o.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(o.nombre)}</button>`).join('\n        ')}
+      </div>`).join('')}
     </div>
 ${menus.map(panel).join('\n')}`,
 }));
@@ -194,9 +203,13 @@ function slide(m, p, actual, cerca) {
           </li>`;
 }
 
+// borra las páginas generadas antes (también las de menús que ya no existen)
+for (const d of readdirSync(new URL('menu/', root), { withFileTypes: true })) {
+  if (d.isDirectory()) rmSync(new URL(`menu/${d.name}/`, root), { recursive: true });
+}
+
 let paginas = 0;
 for (const m of menus) {
-  rmSync(new URL(`menu/${m.id}/`, root), { recursive: true, force: true });
   m.orden.forEach((p, i) => {
     const total = m.orden.length;
     const cerca = (j) => Math.min(Math.abs(i - j), total - Math.abs(i - j)) <= 1;
@@ -210,8 +223,13 @@ for (const m of menus) {
       jsonLd: { '@context': 'https://schema.org', '@type': 'MenuItem', name: p.nombre, description: p.descripcion, image: `../../../${p.imagen}` },
       volver: { href: `../../../#${p.seccion.ancla}`, texto: 'Menú', aria: 'al menú' },
       cuerpo: `
-      <nav class="menu-tabs" aria-label="Tipo de menú">
-        ${menus.map((o) => `<a class="menu-tab" href="../../../#${o.id}"${o === m ? ' aria-current="page"' : ''}>${esc(o.nombre)}</a>`).join('\n        ')}
+      <nav class="menu-tabs" aria-label="Menús">${GRUPOS.map((g) => `
+        <div class="menu-tabs-fila menu-tabs-${g.id}">
+          ${data[g.lista].map((o) => {
+            const destino = g.id === 'publico' ? `${o.id}-${m.tipo}` : `${m.publico}-${o.id}`;
+            return `<a class="menu-tab" href="../../../#${destino}"${o.id === m[g.id] ? ' aria-current="page"' : ''}>${esc(o.nombre)}</a>`;
+          }).join('\n          ')}
+        </div>`).join('')}
       </nav>
 
       <section class="carrusel" aria-roledescription="carrusel" aria-label="${esc(m.titulo)}">
@@ -240,4 +258,4 @@ ${cta(m)}`,
 }
 
 console.log(`index.html: ${menus.map((m) => `${m.id} (${m.secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ') || 'sin platos'})`).join('; ')}`);
-console.log(`${paginas} páginas de detalle${contacto ? '' : ' — falta contacto.email en data/menu-adultos.json: el botón "Escribinos" no se muestra'}`);
+console.log(`${paginas} páginas de detalle${contacto ? '' : ' — falta contacto.email en data/menu.json: el botón "Escribinos" no se muestra'}`);

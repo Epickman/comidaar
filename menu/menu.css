@@ -51,8 +51,11 @@ html { scroll-behavior: smooth; }
 .menu-cta-btn:hover { background: transparent; color: var(--text); }
 
 /* ---------- pestañas Premium / Tradicional ---------- */
-/* fija debajo del header al scrollear */
-.menu-tabs { position: sticky; top: var(--header-h); z-index: 11; display: flex; justify-content: center; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+/* fijas debajo del header al scrollear: público arriba, tipo abajo */
+.menu-tabs { position: sticky; top: var(--header-h); z-index: 11; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
+.menu-tabs-fila { display: flex; justify-content: center; }
+.menu-tabs-publico { border-bottom: 1px solid var(--line-soft); }
+.menu-tabs-tipo .menu-tab { padding-top: 10px; padding-bottom: 10px; font-family: var(--sans); font-size: .72rem; font-weight: 400; letter-spacing: .2em; text-transform: uppercase; }
 .menu-tab {
   padding: 14px clamp(18px, 4vw, 36px); background: none; border: 0; border-bottom: 1px solid transparent; margin-bottom: -1px;
   font-family: var(--serif); font-size: clamp(1.15rem, 2.4vw, 1.5rem); font-weight: 400; color: var(--muted);

@@ -12,42 +12,54 @@
   if (tabsBar) new ResizeObserver(syncHeader).observe(tabsBar);
   syncHeader();
 
-  // ---------- pestañas Premium / Tradicional ----------
-  const tabs = [...document.querySelectorAll('.menu-tab')];
-  const panels = tabs.map((t) => document.getElementById(t.getAttribute('aria-controls')));
+  // ---------- pestañas en dos niveles: público (Adultos / Adolescentes) y tipo (Premium / Regular) ----------
+  const panels = [...document.querySelectorAll('.menu-panel')];
+  const grupos = [...document.querySelectorAll('.menu-tabs [role="tablist"]')];
+  const estadoTabs = {};
+  grupos.forEach((g) => { estadoTabs[g.dataset.grupo] = g.querySelector('[aria-selected="true"]').dataset.valor; });
 
-  function elegir(i, { foco = false, hash = true } = {}) {
-    tabs.forEach((t, j) => {
-      t.setAttribute('aria-selected', String(i === j));
-      t.tabIndex = i === j ? 0 : -1;
-      panels[j].hidden = i !== j;
-    });
-    if (foco) tabs[i].focus();
-    if (hash) history.replaceState(null, '', `#${panels[i].id}`);
+  function mostrar({ foco = null, hash = true } = {}) {
+    const id = `${estadoTabs.publico}-${estadoTabs.tipo}`;
+    panels.forEach((p) => { p.hidden = p.id !== id; });
+    grupos.forEach((g) => g.querySelectorAll('[role="tab"]').forEach((t) => {
+      const sel = t.dataset.valor === estadoTabs[g.dataset.grupo];
+      t.setAttribute('aria-selected', String(sel));
+      t.tabIndex = sel ? 0 : -1;
+    }));
+    foco?.focus();
+    if (hash) history.replaceState(null, '', `#${id}`);
     document.getElementById('buscar')?.dispatchEvent(new Event('input')); // actualiza el conteo
   }
 
-  tabs.forEach((t, i) => {
-    t.addEventListener('click', () => elegir(i));
-    t.addEventListener('keydown', (e) => {
-      const paso = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
-      if (!paso) return;
-      e.preventDefault();
-      elegir((i + paso + tabs.length) % tabs.length, { foco: true });
+  grupos.forEach((g) => {
+    const tabs = [...g.querySelectorAll('[role="tab"]')];
+    tabs.forEach((t, i) => {
+      t.addEventListener('click', () => { estadoTabs[g.dataset.grupo] = t.dataset.valor; mostrar(); });
+      t.addEventListener('keydown', (e) => {
+        const paso = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
+        if (!paso) return;
+        e.preventDefault();
+        const otra = tabs[(i + paso + tabs.length) % tabs.length];
+        estadoTabs[g.dataset.grupo] = otra.dataset.valor;
+        mostrar({ foco: otra });
+      });
     });
   });
 
-  // #tradicional abre esa pestaña; #premium-postres abre Premium y baja a la sección
+  // #adolescentes-regular abre ese menú; #adultos-premium-postres abre Adultos · Premium y baja a la sección
   function desdeHash() {
-    const destino = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
-    if (!destino) return;
-    const i = panels.findIndex((p) => p.contains(destino));
-    if (i < 0) return;
-    elegir(i, { hash: false });
-    if (destino !== panels[i]) destino.scrollIntoView();
+    const destino = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
+    const panel = destino?.closest('.menu-panel');
+    if (!panel) return;
+    estadoTabs.publico = panel.dataset.publico;
+    estadoTabs.tipo = panel.dataset.tipo;
+    mostrar({ hash: false });
+    if (destino !== panel) destino.scrollIntoView();
   }
-  addEventListener('hashchange', desdeHash);
-  desdeHash();
+  if (panels.length) {
+    addEventListener('hashchange', desdeHash);
+    desdeHash();
+  }
 
   // ---------- navegación entre secciones: marca la sección visible ----------
   const chips = [...document.querySelectorAll('.menu-nav .chip')];
