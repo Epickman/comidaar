@@ -2,10 +2,6 @@
 // Los platos y el JSON-LD quedan en el HTML (sin depender de JS) para buscadores.
 //
 //   node tools/build-menu.mjs
-//
-// Campo opcional por plato:
-//   modelo3d  { "glb": "models/x.glb", "usdz": "models/x.usdz" } → botón "Ver en AR" en el modal.
-//             Si ningún plato tiene modelo, <model-viewer> no se carga.
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
@@ -28,17 +24,12 @@ const secciones = SECCIONES.map((s) => ({
   ...s,
   platos: menu.platos.filter((p) => p.categoria === s.id).sort((a, b) => a.orden - b.orden),
 }));
-const conAR = menu.platos.some((p) => p.modelo3d?.glb);
-
 let n = 0;
 function card(p) {
   const lazy = n++ >= EAGER;
-  const ar = p.modelo3d?.glb
-    ? ` data-glb="${esc(url(p.modelo3d.glb))}"${p.modelo3d.usdz ? ` data-usdz="${esc(url(p.modelo3d.usdz))}"` : ''}`
-    : '';
   return `
           <li>
-            <button type="button" class="menu-card" id="${esc(p.id)}" aria-haspopup="dialog"${ar}>
+            <button type="button" class="menu-card" id="${esc(p.id)}" aria-haspopup="dialog">
               <span class="menu-card-media"><img src="${esc(url(p.imagen))}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async"></span>
               <span class="menu-card-body">
                 <span class="menu-card-title">${esc(p.nombre)}</span>
@@ -81,8 +72,7 @@ const html = `<!doctype html>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="menu.css">
-  <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>${conAR ? `
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>` : ''}
+  <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -130,7 +120,6 @@ ${secciones.map((s) => `
     <div class="menu-modal-body">
       <h2 id="menu-modal-titulo"></h2>
       <p></p>
-      <button type="button" class="menu-ar" hidden>Ver en AR</button>
     </div>
   </dialog>
 
@@ -145,4 +134,4 @@ ${secciones.map((s) => `
 `;
 
 writeFileSync(new URL('menu/index.html', root), html);
-console.log(`menu/index.html: ${secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ')}${conAR ? ' (con AR)' : ''}`);
+console.log(`menu/index.html: ${secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ')}`);

@@ -34,10 +34,6 @@ desde el JSON para que los platos y el JSON-LD (`schema.org/Menu`) queden en la 
 node tools/build-menu.mjs   # reescribe menu/index.html
 ```
 
-Para habilitar AR en un plato, completá su `modelo3d`:
-`{ "glb": "models/x.glb", "usdz": "models/x.usdz" }` y volvé a generar. `<model-viewer>`
-solo se carga si al menos un plato tiene modelo.
-
 ## Archivos
 
 | | |

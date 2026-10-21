@@ -45,7 +45,7 @@ html { scroll-behavior: smooth; }
 .menu-modal::backdrop { background: rgba(0, 0, 0, .8); backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); }
 .menu-modal[open] { animation: rise .6s var(--ease) both; }
 .menu-modal-media { aspect-ratio: 16 / 9; background: var(--surface-2); }
-.menu-modal-media img, .menu-modal-media model-viewer { width: 100%; height: 100%; object-fit: cover; }
+.menu-modal-media img { width: 100%; height: 100%; object-fit: cover; }
 .menu-modal-body { padding: 26px clamp(20px, 4vw, 40px) 32px; }
 .menu-modal-body h2 { font-family: var(--serif); font-weight: 400; font-size: clamp(1.6rem, 3.4vw, 2.4rem); line-height: 1.15; margin: 0; }
 .menu-modal-body p { color: var(--muted); font-size: 1.02rem; line-height: 1.7; margin: 14px 0 0; }
@@ -56,8 +56,3 @@ html { scroll-behavior: smooth; }
 }
 .menu-modal-close svg { width: 20px; height: 20px; }
 .menu-modal-close:hover { border-color: var(--text); }
-.menu-ar {
-  margin-top: 22px; padding: 12px 24px; border-radius: 100px; border: 1px solid var(--text); background: var(--text); color: var(--accent-ink);
-  font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase;
-}
-.menu-ar[hidden] { display: none; }

@@ -29,11 +29,9 @@
 
   // ---------- modal del plato ----------
   const modal = document.getElementById('menu-modal');
-  const media = modal.querySelector('.menu-modal-media');
-  const img = media.querySelector('img');
+  const img = modal.querySelector('.menu-modal-media img');
   const titulo = modal.querySelector('h2');
   const desc = modal.querySelector('.menu-modal-body p');
-  const btnAR = modal.querySelector('.menu-ar');
   let card = null;
 
   function abrir(c) {
@@ -41,39 +39,17 @@
     const foto = c.querySelector('img');
     img.src = foto.currentSrc || foto.src;
     img.alt = foto.alt;
-    img.hidden = false;
     titulo.textContent = c.querySelector('.menu-card-title').textContent;
     desc.textContent = c.querySelector('.menu-card-desc').textContent;
-    btnAR.hidden = !c.dataset.glb;
     modal.showModal();
   }
 
   function cerrar() { modal.close(); }
 
-  modal.addEventListener('close', () => {
-    media.querySelector('model-viewer')?.remove();
-    card?.focus();
-  });
+  modal.addEventListener('close', () => card?.focus());
   modal.querySelector('.menu-modal-close').addEventListener('click', cerrar);
   // click en el fondo (fuera del contenido del diálogo)
   modal.addEventListener('click', (e) => { if (e.target === modal) cerrar(); });
 
   document.querySelectorAll('.menu-card').forEach((c) => c.addEventListener('click', () => abrir(c)));
-
-  // ---------- AR (solo si el plato tiene modelo3d; <model-viewer> se carga solo en ese caso) ----------
-  btnAR.addEventListener('click', () => {
-    if (!card?.dataset.glb || media.querySelector('model-viewer')) return;
-    const mv = document.createElement('model-viewer');
-    mv.setAttribute('src', card.dataset.glb);
-    if (card.dataset.usdz) mv.setAttribute('ios-src', card.dataset.usdz);
-    mv.setAttribute('alt', `Modelo 3D de ${img.alt}`);
-    mv.setAttribute('ar', '');
-    mv.setAttribute('ar-modes', 'webxr scene-viewer quick-look');
-    mv.setAttribute('camera-controls', '');
-    mv.setAttribute('auto-rotate', '');
-    mv.setAttribute('poster', img.src);
-    img.hidden = true;
-    media.append(mv);
-    mv.addEventListener('load', () => { if (mv.canActivateAR) mv.activateAR(); }, { once: true });
-  });
 })();
