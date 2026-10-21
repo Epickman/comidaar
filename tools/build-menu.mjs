@@ -2,10 +2,13 @@
 // Los platos y el JSON-LD quedan en el HTML (sin depender de JS) para buscadores.
 //
 //   node tools/build-menu.mjs
+//
+// data/menu-adultos.json tiene un menú por cada tipo (premium, tradicional…); cada uno con
+// sus platos (categoria: entradas | principales | postres). Un menú sin platos muestra "Próximamente".
 import { readFileSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
-const menu = JSON.parse(readFileSync(new URL('data/menu-adultos.json', root), 'utf8'));
+const data = JSON.parse(readFileSync(new URL('data/menu-adultos.json', root), 'utf8'));
 
 const SECCIONES = [
   { id: 'entradas', titulo: 'Platos de entrada' },
@@ -15,37 +18,59 @@ const SECCIONES = [
 const IMG_W = 1200;
 const IMG_H = 676;
 const EAGER = 3; // las primeras fotos no se cargan en diferido
-const DESCRIPCION = 'Menú adultos de Vonharv: platos de entrada, principales y postres, con foto y descripción de cada plato.';
+const DESCRIPCION = 'Menú adultos de Vonharv, Premium y Tradicional: platos de entrada, principales y postres, con foto y descripción de cada plato.';
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const url = (p) => `../${p}`; // la página vive en /menu/
 
-const secciones = SECCIONES.map((s) => ({
-  ...s,
-  platos: menu.platos.filter((p) => p.categoria === s.id).sort((a, b) => a.orden - b.orden),
+const menus = data.menus.map((m) => ({
+  ...m,
+  secciones: SECCIONES.map((s) => ({
+    ...s,
+    ancla: `${m.id}-${s.id}`,
+    platos: m.platos.filter((p) => p.categoria === s.id).sort((a, b) => a.orden - b.orden),
+  })).filter((s) => s.platos.length),
 }));
+
 let n = 0;
 function card(p) {
   const lazy = n++ >= EAGER;
   return `
-          <li>
-            <button type="button" class="menu-card" id="${esc(p.id)}" aria-haspopup="dialog">
-              <span class="menu-card-media"><img src="${esc(url(p.imagen))}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async"></span>
-              <span class="menu-card-body">
-                <span class="menu-card-title">${esc(p.nombre)}</span>
-                <span class="menu-card-desc">${esc(p.descripcion)}</span>
-              </span>
-            </button>
-          </li>`;
+            <li>
+              <button type="button" class="menu-card" id="${esc(p.id)}" aria-haspopup="dialog">
+                <span class="menu-card-media"><img src="${esc(url(p.imagen))}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async"></span>
+                <span class="menu-card-body">
+                  <span class="menu-card-title">${esc(p.nombre)}</span>
+                  <span class="menu-card-desc">${esc(p.descripcion)}</span>
+                </span>
+              </button>
+            </li>`;
 }
 
-const jsonLd = {
+function panel(m, i) {
+  const contenido = m.secciones.length ? `
+      <nav class="filters menu-nav" aria-label="Secciones del menú ${esc(m.nombre)}">
+        ${m.secciones.map((s) => `<a class="chip" href="#${s.ancla}">${esc(s.titulo)}</a>`).join('\n        ')}
+      </nav>
+${m.secciones.map((s) => `
+      <section class="menu-section" id="${s.ancla}" aria-labelledby="${s.ancla}-titulo">
+        <h2 class="cat-title" id="${s.ancla}-titulo">${esc(s.titulo)}</h2>
+        <ul class="menu-grid">${s.platos.map(card).join('')}
+        </ul>${s.id === 'principales' && m.nota_principales ? `
+        <aside class="menu-nota"><strong>Nota</strong> ${esc(m.nota_principales)}</aside>` : ''}
+      </section>`).join('\n')}` : `
+      <p class="menu-vacio">Próximamente.</p>`;
+  return `
+    <div class="menu-panel" id="${m.id}" role="tabpanel" aria-labelledby="tab-${m.id}"${i ? ' hidden' : ''}>${contenido}
+    </div>`;
+}
+
+const jsonLd = menus.filter((m) => m.secciones.length).map((m) => ({
   '@context': 'https://schema.org',
   '@type': 'Menu',
-  name: `${menu.titulo} · Vonharv`,
-  description: DESCRIPCION,
+  name: `${m.titulo} · Vonharv`,
   inLanguage: 'es',
-  hasMenuSection: secciones.map((s) => ({
+  hasMenuSection: m.secciones.map((s) => ({
     '@type': 'MenuSection',
     name: s.titulo,
     hasMenuItem: s.platos.map((p) => ({
@@ -55,7 +80,7 @@ const jsonLd = {
       image: url(p.imagen),
     })),
   })),
-};
+}));
 
 const html = `<!doctype html>
 <!-- Generado por tools/build-menu.mjs a partir de data/menu-adultos.json. No editar a mano. -->
@@ -63,7 +88,7 @@ const html = `<!doctype html>
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <title>${esc(menu.titulo)} · Vonharv</title>
+  <title>${esc(data.titulo)} · Vonharv</title>
   <meta name="description" content="${esc(DESCRIPCION)}">
   <meta name="theme-color" content="#050505">
   <link rel="icon" href="../assets/logo-blanco.png">
@@ -72,7 +97,7 @@ const html = `<!doctype html>
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../styles.css">
   <link rel="stylesheet" href="menu.css">
-  <script type="application/ld+json">${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>
+  <script type="application/ld+json">${JSON.stringify(jsonLd.length === 1 ? jsonLd[0] : jsonLd).replace(/</g, '\\u003c')}</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -94,20 +119,14 @@ const html = `<!doctype html>
   <main id="app">
     <section class="hero">
       <p class="eyebrow">Vonharv</p>
-      <h1>${esc(menu.titulo)}</h1>
-      <p>Tocá un plato para verlo en detalle.</p>
+      <h1>${esc(data.titulo)}</h1>
+      <p>Elegí el menú y tocá un plato para verlo en detalle.</p>
     </section>
 
-    <nav class="filters menu-nav" aria-label="Secciones del menú">
-      ${secciones.map((s) => `<a class="chip" href="#${s.id}">${esc(s.titulo)}</a>`).join('\n      ')}
-    </nav>
-${secciones.map((s) => `
-    <section class="menu-section" id="${s.id}" aria-labelledby="${s.id}-titulo">
-      <h2 class="cat-title" id="${s.id}-titulo">${esc(s.titulo)}</h2>
-      <ul class="menu-grid">${s.platos.map(card).join('')}
-      </ul>${s.id === 'principales' && menu.nota_principales ? `
-      <aside class="menu-nota"><strong>Nota</strong> ${esc(menu.nota_principales)}</aside>` : ''}
-    </section>`).join('\n')}
+    <div class="menu-tabs" role="tablist" aria-label="Tipo de menú">
+      ${menus.map((m, i) => `<button type="button" class="menu-tab" role="tab" id="tab-${m.id}" aria-controls="${m.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(m.nombre)}</button>`).join('\n      ')}
+    </div>
+${menus.map(panel).join('\n')}
   </main>
 
   <dialog class="menu-modal" id="menu-modal" aria-labelledby="menu-modal-titulo">
@@ -125,7 +144,6 @@ ${secciones.map((s) => `
 
   <footer class="foot">
     <img src="../assets/logo-blanco.png" alt="" aria-hidden="true">
-    <p>Las imágenes son ilustrativas.</p>
   </footer>
 
   <script src="menu.js"></script>
@@ -134,4 +152,4 @@ ${secciones.map((s) => `
 `;
 
 writeFileSync(new URL('menu/index.html', root), html);
-console.log(`menu/index.html: ${secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ')}`);
+console.log(`menu/index.html: ${menus.map((m) => `${m.id} (${m.secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ') || 'sin platos'})`).join('; ')}`);

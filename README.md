@@ -26,8 +26,8 @@ agregá `fotoRecorte: 'circulo'` para recortarlo al plato.
 
 ## Menú adultos (`/menu/`)
 
-Página aparte con los 41 platos del “Menú adultos PREMIUM”. Los datos están en
-`data/menu-adultos.json` y las fotos (1200×676) en `assets/menu/`. El HTML se genera
+Página aparte con pestañas **Premium** (41 platos) y **Tradicional** (por ahora vacío: muestra
+“Próximamente”). Los datos están en `data/menu-adultos.json`, un bloque por menú, y las fotos (1200×676) en `assets/menu/`. El HTML se genera
 desde el JSON para que los platos y el JSON-LD (`schema.org/Menu`) queden en la página:
 
 ```bash

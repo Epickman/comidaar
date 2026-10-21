@@ -56,3 +56,15 @@ html { scroll-behavior: smooth; }
 }
 .menu-modal-close svg { width: 20px; height: 20px; }
 .menu-modal-close:hover { border-color: var(--text); }
+
+/* ---------- pestañas Premium / Tradicional ---------- */
+.menu-tabs { display: flex; justify-content: center; margin: 8px 0 0; border-bottom: 1px solid var(--line); }
+.menu-tab {
+  padding: 14px clamp(18px, 4vw, 36px); background: none; border: 0; border-bottom: 1px solid transparent; margin-bottom: -1px;
+  font-family: var(--serif); font-size: clamp(1.15rem, 2.4vw, 1.5rem); font-weight: 400; color: var(--muted);
+  transition: color .3s ease, border-color .3s ease;
+}
+.menu-tab:hover { color: var(--text); }
+.menu-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
+.menu-panel[hidden] { display: none; }
+.menu-vacio { margin: 64px 0 24px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--muted); }
