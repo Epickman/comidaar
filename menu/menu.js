@@ -12,14 +12,14 @@
   if (tabsBar) new ResizeObserver(syncHeader).observe(tabsBar);
   syncHeader();
 
-  // ---------- pestañas en dos niveles: público (Adultos / Adolescentes) y tipo (Premium / Regular) ----------
+  // ---------- pestañas: Adultos Premium / Adultos Tradicional / Adolescentes ----------
   const panels = [...document.querySelectorAll('.menu-panel')];
   const grupos = [...document.querySelectorAll('.menu-tabs [role="tablist"]')];
   const estadoTabs = {};
   grupos.forEach((g) => { estadoTabs[g.dataset.grupo] = g.querySelector('[aria-selected="true"]').dataset.valor; });
 
   function mostrar({ foco = null, hash = true } = {}) {
-    const id = `${estadoTabs.publico}-${estadoTabs.tipo}`;
+    const id = estadoTabs.menu;
     panels.forEach((p) => { p.hidden = p.id !== id; });
     grupos.forEach((g) => g.querySelectorAll('[role="tab"]').forEach((t) => {
       const sel = t.dataset.valor === estadoTabs[g.dataset.grupo];
@@ -46,13 +46,12 @@
     });
   });
 
-  // #adolescentes-regular abre ese menú; #adultos-premium-postres abre Adultos · Premium y baja a la sección
+  // #adolescentes abre ese menú; #adultos-premium-postres abre Adultos Premium y baja a la sección
   function desdeHash() {
     const destino = location.hash ? document.getElementById(decodeURIComponent(location.hash.slice(1))) : null;
     const panel = destino?.closest('.menu-panel');
     if (!panel) return;
-    estadoTabs.publico = panel.dataset.publico;
-    estadoTabs.tipo = panel.dataset.tipo;
+    estadoTabs.menu = panel.id;
     mostrar({ hash: false });
     if (destino !== panel) destino.scrollIntoView();
   }

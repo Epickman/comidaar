@@ -1,33 +1,12 @@
 {
   "titulo": "Menú",
-  "publicos": [
-    {
-      "id": "adultos",
-      "nombre": "Adultos"
-    },
-    {
-      "id": "adolescentes",
-      "nombre": "Adolescentes"
-    }
-  ],
-  "tipos": [
-    {
-      "id": "premium",
-      "nombre": "Premium"
-    },
-    {
-      "id": "regular",
-      "nombre": "Regular"
-    }
-  ],
   "contacto": {
     "email": "contacto@vonharv.com"
   },
   "menus": [
     {
       "id": "adultos-premium",
-      "publico": "adultos",
-      "tipo": "premium",
+      "nombre": "Adultos Premium",
       "titulo": "Menú adultos PREMIUM",
       "fuente": "Vonharv — Menú adultos PREMIUM",
       "nota_principales": "Según el menú abonado, en los platos 'Carne o ave/bondiola' se puede elegir el plato y combinar guarniciones y salsas.",
@@ -404,26 +383,16 @@
       ]
     },
     {
-      "id": "adultos-regular",
-      "publico": "adultos",
-      "tipo": "regular",
-      "titulo": "Menú adultos regular",
+      "id": "adultos-tradicional",
+      "nombre": "Adultos Tradicional",
+      "titulo": "Menú adultos tradicional",
       "nota_principales": null,
       "platos": []
     },
     {
-      "id": "adolescentes-premium",
-      "publico": "adolescentes",
-      "tipo": "premium",
-      "titulo": "Menú adolescentes PREMIUM",
-      "nota_principales": null,
-      "platos": []
-    },
-    {
-      "id": "adolescentes-regular",
-      "publico": "adolescentes",
-      "tipo": "regular",
-      "titulo": "Menú adolescentes regular",
+      "id": "adolescentes",
+      "nombre": "Adolescentes",
+      "titulo": "Menú adolescentes",
       "nota_principales": null,
       "platos": []
     }

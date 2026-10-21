@@ -1,7 +1,7 @@
 # Vonharv · Menú
 
 Menú web de Vonharv con la estética de [vonharv.com](https://vonharv.com). Al entrar se ve el menú,
-con dos filas de pestañas: público (**Adultos** / **Adolescentes**) y tipo (**Premium** / **Regular**).
+con pestañas **Adultos Premium**, **Adultos Tradicional** y **Adolescentes**.
 Cada menú se divide en platos de entrada, principales y postres, y tiene un buscador. Tocando un plato
 se abre un carrusel con todas las cards del menú y, debajo, el listado de platos.
 
@@ -19,8 +19,7 @@ Para publicarlo sirve tal cual en Vercel, Netlify o GitHub Pages.
 
 ## Cambiar el menú
 
-Todo está en `data/menu.json`: `publicos` y `tipos` definen las pestañas, y hay un bloque por menú
-(`id` = `<publico>-<tipo>`, por ejemplo `adultos-premium`) con sus platos
+Todo está en `data/menu.json`: un bloque por menú (`id`, `nombre` de la pestaña, `titulo`) con sus platos
 (`categoria`: `entradas` | `principales` | `postres`, `orden`, `nombre`, `descripcion`, `imagen`).
 Las fotos (1200×676) van en `assets/menu/`. Un menú sin platos muestra “Próximamente”.
 `contacto.email` es el destino del botón “Escribinos” de cada plato.

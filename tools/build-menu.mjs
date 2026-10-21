@@ -1,12 +1,12 @@
 // Genera el sitio a partir de data/menu.json:
-//   index.html                     inicio: pestañas por público (adultos, adolescentes) y tipo
-//                                  (premium, regular) con la grilla de platos de cada menú
+//   index.html                     inicio: una pestaña por menú (adultos premium, adultos tradicional,
+//                                  adolescentes) con la grilla de platos de cada uno
 //   menu/<menu>/<plato>/index.html detalle de cada plato
 // Los platos y el JSON-LD quedan en el HTML (sin depender de JS) para buscadores.
 //
 //   node tools/build-menu.mjs
 //
-// Hay un menú por combinación de público y tipo (id "<publico>-<tipo>"); cada uno con sus platos
+// Cada menú tiene su pestaña (`nombre`) y sus platos
 // (categoria: entradas | principales | postres); uno sin platos muestra
 // "Próximamente". `contacto.email` es el destino del botón "Escribinos" del detalle.
 // Reseñas (opcional, por plato): "resenas": [{ "autor": "…", "texto": "…", "estrellas": 5 }]
@@ -23,7 +23,7 @@ const SECCIONES = [
 const IMG_W = 1200;
 const IMG_H = 676;
 const EAGER = 3; // las primeras fotos no se cargan en diferido
-const DESCRIPCION = 'Menú de Vonharv para adultos y adolescentes, Premium y Regular: platos de entrada, principales y postres, con foto y descripción de cada plato.';
+const DESCRIPCION = 'Menú de Vonharv, adultos premium, adultos tradicional y adolescentes: platos de entrada, principales y postres, con foto y descripción de cada plato.';
 
 const esc = (s = '') => String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const ld = (o) => JSON.stringify(o).replace(/</g, '\\u003c');
@@ -91,12 +91,6 @@ const cta = (m) => `
           ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
         </div>`;
 
-// dos filas de pestañas: público arriba, tipo abajo
-const GRUPOS = [
-  { id: 'publico', lista: 'publicos', etiqueta: 'Público' },
-  { id: 'tipo', lista: 'tipos', etiqueta: 'Tipo de menú' },
-];
-
 // ---------- inicio: index.html ----------
 let n = 0;
 function card(m, p) {
@@ -130,7 +124,7 @@ ${m.secciones.map((s) => `
       </div>` : `
       <p class="menu-vacio">Próximamente.</p>`;
   return `
-    <div class="menu-panel" id="${m.id}" role="tabpanel" aria-label="${esc(m.titulo)}" data-publico="${m.publico}" data-tipo="${m.tipo}"${i ? ' hidden' : ''}>${contenido}
+    <div class="menu-panel" id="${m.id}" role="tabpanel" aria-label="${esc(m.titulo)}"${i ? ' hidden' : ''}>${contenido}
     </div>`;
 }
 
@@ -167,10 +161,10 @@ writeFileSync(new URL('index.html', root), pagina({
       <p class="buscador-estado" aria-live="polite"></p>
     </div>
 
-    <div class="menu-tabs">${GRUPOS.map((g) => `
-      <div class="menu-tabs-fila menu-tabs-${g.id}" role="tablist" aria-label="${g.etiqueta}" data-grupo="${g.id}">
-        ${data[g.lista].map((o, i) => `<button type="button" class="menu-tab" role="tab" data-valor="${o.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(o.nombre)}</button>`).join('\n        ')}
-      </div>`).join('')}
+    <div class="menu-tabs">
+      <div class="menu-tabs-fila" role="tablist" aria-label="Menús" data-grupo="menu">
+        ${menus.map((o, i) => `<button type="button" class="menu-tab" role="tab" data-valor="${o.id}" aria-controls="${o.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(o.nombre)}</button>`).join('\n        ')}
+      </div>
     </div>
 ${menus.map(panel).join('\n')}`,
 }));
@@ -223,13 +217,10 @@ for (const m of menus) {
       jsonLd: { '@context': 'https://schema.org', '@type': 'MenuItem', name: p.nombre, description: p.descripcion, image: `../../../${p.imagen}` },
       volver: { href: `../../../#${p.seccion.ancla}`, texto: 'Menú', aria: 'al menú' },
       cuerpo: `
-      <nav class="menu-tabs" aria-label="Menús">${GRUPOS.map((g) => `
-        <div class="menu-tabs-fila menu-tabs-${g.id}">
-          ${data[g.lista].map((o) => {
-            const destino = g.id === 'publico' ? `${o.id}-${m.tipo}` : `${m.publico}-${o.id}`;
-            return `<a class="menu-tab" href="../../../#${destino}"${o.id === m[g.id] ? ' aria-current="page"' : ''}>${esc(o.nombre)}</a>`;
-          }).join('\n          ')}
-        </div>`).join('')}
+      <nav class="menu-tabs" aria-label="Menús">
+        <div class="menu-tabs-fila">
+          ${menus.map((o) => `<a class="menu-tab" href="../../../#${o.id}"${o === m ? ' aria-current="page"' : ''}>${esc(o.nombre)}</a>`).join('\n          ')}
+        </div>
       </nav>
 
       <section class="carrusel" aria-roledescription="carrusel" aria-label="${esc(m.titulo)}">

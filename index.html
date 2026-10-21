@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Menú · Vonharv</title>
-  <meta name="description" content="Menú de Vonharv para adultos y adolescentes, Premium y Regular: platos de entrada, principales y postres, con foto y descripción de cada plato.">
+  <meta name="description" content="Menú de Vonharv, adultos premium, adultos tradicional y adolescentes: platos de entrada, principales y postres, con foto y descripción de cada plato.">
   <meta name="theme-color" content="#050505">
   <link rel="icon" href="assets/logo-blanco.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,17 +41,14 @@
     </div>
 
     <div class="menu-tabs">
-      <div class="menu-tabs-fila menu-tabs-publico" role="tablist" aria-label="Público" data-grupo="publico">
-        <button type="button" class="menu-tab" role="tab" data-valor="adultos" aria-selected="true">Adultos</button>
-        <button type="button" class="menu-tab" role="tab" data-valor="adolescentes" aria-selected="false" tabindex="-1">Adolescentes</button>
-      </div>
-      <div class="menu-tabs-fila menu-tabs-tipo" role="tablist" aria-label="Tipo de menú" data-grupo="tipo">
-        <button type="button" class="menu-tab" role="tab" data-valor="premium" aria-selected="true">Premium</button>
-        <button type="button" class="menu-tab" role="tab" data-valor="regular" aria-selected="false" tabindex="-1">Regular</button>
+      <div class="menu-tabs-fila" role="tablist" aria-label="Menús" data-grupo="menu">
+        <button type="button" class="menu-tab" role="tab" data-valor="adultos-premium" aria-controls="adultos-premium" aria-selected="true">Adultos Premium</button>
+        <button type="button" class="menu-tab" role="tab" data-valor="adultos-tradicional" aria-controls="adultos-tradicional" aria-selected="false" tabindex="-1">Adultos Tradicional</button>
+        <button type="button" class="menu-tab" role="tab" data-valor="adolescentes" aria-controls="adolescentes" aria-selected="false" tabindex="-1">Adolescentes</button>
       </div>
     </div>
 
-    <div class="menu-panel" id="adultos-premium" role="tabpanel" aria-label="Menú adultos PREMIUM" data-publico="adultos" data-tipo="premium">
+    <div class="menu-panel" id="adultos-premium" role="tabpanel" aria-label="Menú adultos PREMIUM">
       <nav class="filters menu-nav" aria-label="Secciones del Menú adultos PREMIUM">
         <a class="chip" href="#adultos-premium-entradas">Platos de entrada</a>
         <a class="chip" href="#adultos-premium-principales">Platos principales</a>
@@ -454,15 +451,11 @@
       </div>
     </div>
 
-    <div class="menu-panel" id="adultos-regular" role="tabpanel" aria-label="Menú adultos regular" data-publico="adultos" data-tipo="regular" hidden>
+    <div class="menu-panel" id="adultos-tradicional" role="tabpanel" aria-label="Menú adultos tradicional" hidden>
       <p class="menu-vacio">Próximamente.</p>
     </div>
 
-    <div class="menu-panel" id="adolescentes-premium" role="tabpanel" aria-label="Menú adolescentes PREMIUM" data-publico="adolescentes" data-tipo="premium" hidden>
-      <p class="menu-vacio">Próximamente.</p>
-    </div>
-
-    <div class="menu-panel" id="adolescentes-regular" role="tabpanel" aria-label="Menú adolescentes regular" data-publico="adolescentes" data-tipo="regular" hidden>
+    <div class="menu-panel" id="adolescentes" role="tabpanel" aria-label="Menú adolescentes" hidden>
       <p class="menu-vacio">Próximamente.</p>
     </div>
   </main>
