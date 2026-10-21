@@ -184,7 +184,10 @@ function slide(m, p, actual, cerca) {
               <p class="carrusel-seccion">${esc(p.seccion.titulo)}</p>
               <${h} class="carrusel-titulo">${esc(p.nombre)}</${h}>
               <p class="carrusel-desc">${esc(p.descripcion)}</p>
-              <section class="resenas" data-plato="${esc(p.id)}" aria-label="Reseñas de ${esc(p.nombre)}" hidden></section>
+              <section class="resenas" data-plato="${esc(p.id)}" aria-label="Reseñas de ${esc(p.nombre)}">
+                <p class="carrusel-seccion">Reseñas</p>
+                <div class="resenas-contenido"><p class="resenas-vacio">Sin reseñas todavía.</p></div>
+              </section>
               <details class="resena-nueva">
                 <summary>Dejá tu reseña</summary>
                 <form class="resena-form" data-plato="${esc(p.id)}">

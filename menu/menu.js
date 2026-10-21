@@ -187,7 +187,7 @@
           const lista = result.filter((r) => r.plato === b.dataset.plato);
           if (!lista.length) return;
           const promedio = lista.reduce((t, r) => t + r.estrellas, 0) / lista.length;
-          b.innerHTML = `
+          b.querySelector('.resenas-contenido').innerHTML = `
             <p class="resenas-resumen"><span class="resena-estrellas" aria-hidden="true">${estrellas(Math.round(promedio))}</span>
               <span>${promedio.toFixed(1).replace('.', ',')} · ${lista.length === 1 ? '1 reseña' : `${lista.length} reseñas`}</span></p>
             <ul>${lista.map((r) => `
@@ -197,10 +197,9 @@
                 <p class="resena-autor">${esc(r.autor)}</p>
               </li>`).join('')}
             </ul>`;
-          b.hidden = false;
         });
       })
-      .catch(() => {}); // sin reseñas visibles si Sanity no responde
+      .catch(() => {}); // si Sanity no responde queda "Sin reseñas todavía"
 
     document.querySelectorAll('.resena-form').forEach((form) => form.addEventListener('submit', async (e) => {
       e.preventDefault();

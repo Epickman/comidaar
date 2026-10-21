@@ -111,8 +111,9 @@ html { scroll-behavior: smooth; }
 .carrusel-titulo { margin: 0; font-family: var(--serif); font-weight: 400; font-size: clamp(1.7rem, 3.2vw, 2.5rem); line-height: 1.12; text-wrap: balance; }
 .carrusel-desc { margin: 14px 0 0; color: var(--muted); font-size: 1rem; line-height: 1.7; }
 .resenas { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--line-soft); }
-.resenas[hidden] { display: none; }
-.resenas ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 18px; }
+.resenas .carrusel-seccion { margin-bottom: 12px; }
+.resenas-vacio { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.05rem; color: var(--muted); }
+.resenas ul { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 18px; }
 .resenas blockquote { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.08rem; line-height: 1.5; }
 .resenas-resumen { margin: 0; display: flex; align-items: center; gap: 12px; font-size: .78rem; letter-spacing: .08em; color: var(--muted); }
 .resena-estrellas { display: block; margin-bottom: 6px; font-size: .8rem; letter-spacing: .2em; color: var(--text); }
