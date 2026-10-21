@@ -177,6 +177,31 @@
     const esc = (t) => String(t).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const estrellas = (n) => '★'.repeat(n) + '☆'.repeat(5 - n);
 
+    // las reseñas de un plato se pasan de a una, como un carrusel chico dentro de la card
+    function carruselResenas(caja) {
+      const pista = caja.querySelector('.resenas-pista');
+      const items = [...pista.children];
+      const numero = caja.querySelector('.resenas-count span');
+      if (!numero) return;
+      let actual = 0;
+      const ir = (i) => {
+        const j = (i + items.length) % items.length;
+        pista.scrollTo({ left: items[j].offsetLeft - items[0].offsetLeft, behavior: i === j ? 'smooth' : 'instant' });
+      };
+      pista.addEventListener('scroll', () => {
+        const i = Math.round(pista.scrollLeft / pista.clientWidth);
+        if (i !== actual && items[i]) numero.textContent = (actual = i) + 1;
+      }, { passive: true });
+      caja.querySelector('.resenas-prev').addEventListener('click', () => ir(actual - 1));
+      caja.querySelector('.resenas-next').addEventListener('click', () => ir(actual + 1));
+      caja.addEventListener('keydown', (e) => {
+        if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+        e.preventDefault();
+        e.stopPropagation(); // no mover el carrusel de platos
+        ir(actual + (e.key === 'ArrowRight' ? 1 : -1));
+      });
+    }
+
     const bloques = [...document.querySelectorAll('.resenas[data-plato]')];
     const query = '*[_type == "resena" && plato in $platos] | order(_createdAt desc){ plato, autor, estrellas, texto }';
     const params = new URLSearchParams({ query, $platos: JSON.stringify(bloques.map((b) => b.dataset.plato)) });
@@ -198,13 +223,22 @@
           b.querySelector('.resenas-contenido').innerHTML = `
             <p class="resenas-resumen"><span class="resena-estrellas" aria-hidden="true">${estrellas(Math.round(promedio))}</span>
               <span>${promedio.toFixed(1).replace('.', ',')} · ${lista.length === 1 ? '1 reseña' : `${lista.length} reseñas`}</span></p>
-            <ul>${lista.map((r) => `
-              <li>
-                <span class="resena-estrellas" role="img" aria-label="${r.estrellas} de 5 estrellas">${estrellas(r.estrellas)}</span>
-                <blockquote>“${esc(r.texto)}”</blockquote>
-                <p class="resena-autor">${esc(r.autor)}</p>
-              </li>`).join('')}
-            </ul>`;
+            <div class="resenas-carrusel" role="region" aria-roledescription="carrusel" aria-label="Reseñas">
+              <ul class="resenas-pista">${lista.map((r, i) => `
+                <li aria-roledescription="reseña" aria-label="${i + 1} de ${lista.length}">
+                  <span class="resena-estrellas" role="img" aria-label="${r.estrellas} de 5 estrellas">${estrellas(r.estrellas)}</span>
+                  <blockquote>“${esc(r.texto)}”</blockquote>
+                  <p class="resena-autor">${esc(r.autor)}</p>
+                </li>`).join('')}
+              </ul>
+              ${lista.length > 1 ? `
+              <div class="resenas-controles">
+                <button type="button" class="resenas-prev" aria-label="Reseña anterior">‹</button>
+                <span class="resenas-count" aria-live="polite"><span>1</span> / ${lista.length}</span>
+                <button type="button" class="resenas-next" aria-label="Reseña siguiente">›</button>
+              </div>` : ''}
+            </div>`;
+          carruselResenas(b.querySelector('.resenas-carrusel'));
         });
       })
       .catch(() => {}); // si Sanity no responde queda "Sin reseñas todavía"
