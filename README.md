@@ -24,10 +24,26 @@ Si un plato no tiene `foto`, se muestra “Foto próximamente”. Lo ideal es un
 fondo transparente en `assets/`; si la foto es un plato visto desde arriba con fondo,
 agregá `fotoRecorte: 'circulo'` para recortarlo al plato.
 
+## Menú adultos (`/menu/`)
+
+Página aparte con los 41 platos del “Menú adultos PREMIUM”. Los datos están en
+`data/menu-adultos.json` y las fotos (1200×676) en `assets/menu/`. El HTML se genera
+desde el JSON para que los platos y el JSON-LD (`schema.org/Menu`) queden en la página:
+
+```bash
+node tools/build-menu.mjs   # reescribe menu/index.html
+```
+
+Para habilitar AR en un plato, completá su `modelo3d`:
+`{ "glb": "models/x.glb", "usdz": "models/x.usdz" }` y volvé a generar. `<model-viewer>`
+solo se carga si al menos un plato tiene modelo.
+
 ## Archivos
 
 | | |
 |---|---|
 | `index.html`, `styles.css`, `app.js` | el sitio |
 | `data/platos.js` | la carta |
+| `menu/`, `data/menu-adultos.json`, `assets/menu/` | el menú adultos |
+| `tools/build-menu.mjs` | genera `menu/index.html` |
 | `assets/` | logo y fotos |
