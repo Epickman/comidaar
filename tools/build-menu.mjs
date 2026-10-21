@@ -181,9 +181,9 @@ for (const m of menus) {
   <script>${CARRUSEL}</script>`,
       cuerpo: `
       <article class="detail menu-detalle">
-        <div class="stage">
-          <img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high">
-          <span class="stage-count" aria-hidden="true">${i + 1} / ${m.orden.length}</span>
+        <div class="menu-foto">
+          <div class="stage"><img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high"></div>
+          <p class="stage-count">${i + 1} / ${m.orden.length}</p>
         </div>
 
         <div class="info">

@@ -38,7 +38,9 @@ html { scroll-behavior: smooth; }
 }
 
 /* ---------- detalle del plato (sobre .detail/.stage/.info de ../styles.css) ---------- */
-.menu-detalle .stage { aspect-ratio: 16 / 9; height: auto; align-self: start; background: var(--surface-2); }
+.menu-detalle .menu-foto { align-self: start; }
+.menu-detalle .stage { aspect-ratio: 16 / 9; height: auto; position: relative; top: auto; background: var(--surface-2); }
+@media (min-width: 960px) { .menu-detalle .menu-foto { position: sticky; top: calc(var(--header-h) + 28px); } }
 .menu-detalle .stage img { object-fit: cover; padding: 0; }
 .menu-detalle .info h1 { margin-bottom: 0; }
 .menu-detalle .menu-nota { margin-top: 28px; }
@@ -87,10 +89,7 @@ main:has(.menu-detalle) { position: relative; }
   .stage-prev { left: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
   .stage-next { right: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
 }
-.stage-count {
-  position: absolute; right: 14px; bottom: 12px; padding: 4px 10px; border-radius: 100px;
-  background: rgba(5, 5, 5, .55); font-size: .66rem; letter-spacing: .14em; color: var(--text);
-}
+.stage-count { margin: 14px 0 0; text-align: center; font-size: .7rem; letter-spacing: .2em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .menu-detalle .stage { touch-action: pan-y; }
 
 /* deslizamiento entre platos (navegadores con View Transitions entre páginas) */
