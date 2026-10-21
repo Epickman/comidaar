@@ -7,7 +7,7 @@
 //
 // Hay un menú por tipo (premium, regular); cada uno con sus platos
 // (categoria: entradas | principales | postres); uno sin platos muestra
-// "Próximamente". `contacto.url` es el destino del botón "Escribinos" del detalle.
+// "Próximamente". `contacto.email` es el destino del botón "Escribinos" del detalle.
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 
 const root = new URL('../', import.meta.url);
@@ -36,7 +36,7 @@ const menus = data.menus.map((m) => {
 });
 
 // Esqueleto común. `base` es la ruta relativa a la raíz del sitio; `menuBase`, a la carpeta menu/.
-function pagina({ base, menuBase, titulo, descripcion, jsonLd, volver, cuerpo }) {
+function pagina({ base, menuBase, titulo, descripcion, jsonLd, volver, cuerpo, head = '' }) {
   return `<!doctype html>
 <!-- Generado por tools/build-menu.mjs a partir de data/menu-adultos.json. No editar a mano. -->
 <html lang="es">
@@ -52,7 +52,7 @@ function pagina({ base, menuBase, titulo, descripcion, jsonLd, volver, cuerpo })
   <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,500;0,6..96,600;1,6..96,400;1,6..96,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="${base}styles.css">
   <link rel="stylesheet" href="${menuBase}menu.css">
-  <script type="application/ld+json">${ld(jsonLd)}</script>
+  <script type="application/ld+json">${ld(jsonLd)}</script>${head}
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -149,12 +149,16 @@ ${menus.map(panel).join('\n')}`,
 }));
 
 // ---------- detalle: menu/<menu>/<plato>/index.html ----------
-const contacto = data.contacto?.url;
-const cta = `
+const contacto = data.contacto?.email;
+const cta = (m) => `
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            ${contacto ? `<a class="menu-cta-btn" href="${esc(contacto)}"${/^https?:/.test(contacto) ? ' target="_blank" rel="noopener"' : ''}>Escribinos</a>` : ''}
+            ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
           </section>`;
+// Al llegar desde una flecha, la transición desliza el plato hacia el lado que corresponde.
+// Tiene que registrarse en <head>, antes del primer render.
+const CARRUSEL = `addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})`;
+const FLECHA = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 
 let paginas = 0;
 for (const m of menus) {
@@ -171,9 +175,18 @@ for (const m of menus) {
       descripcion: p.descripcion,
       jsonLd: { '@context': 'https://schema.org', '@type': 'MenuItem', name: p.nombre, description: p.descripcion, image: `../../../${p.imagen}` },
       volver: { href: `../../../#${p.seccion.ancla}`, texto: 'Menú', aria: 'al menú' },
+      head: `
+  <link rel="prefetch" href="../${esc(prev.id)}/">
+  <link rel="prefetch" href="../${esc(next.id)}/">
+  <script>${CARRUSEL}</script>`,
       cuerpo: `
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../${esc(prev.id)}/" rel="prev" aria-label="Plato anterior: ${esc(prev.nombre)}">${FLECHA('M15 5l-7 7 7 7')}</a>
+          <a class="stage-nav stage-next" href="../${esc(next.id)}/" rel="next" aria-label="Plato siguiente: ${esc(next.nombre)}">${FLECHA('M9 5l7 7-7 7')}</a>
+          <span class="stage-count" aria-hidden="true">${i + 1} / ${m.orden.length}</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">${esc(m.nombre)} · ${esc(p.seccion.titulo)}</p>
@@ -181,11 +194,11 @@ for (const m of menus) {
           <p class="lead">${esc(p.descripcion)}</p>
 ${p.categoria === 'principales' && m.nota_principales ? `
           <aside class="menu-nota"><strong>Nota</strong> ${esc(m.nota_principales)}</aside>
-` : ''}${cta}
+` : ''}${cta(m)}
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../${esc(prev.id)}/"><small>← Anterior</small><span>${esc(prev.nombre)}</span></a>
-            <a href="../${esc(next.id)}/"><small>Siguiente →</small><span>${esc(next.nombre)}</span></a>
+            <a href="../${esc(prev.id)}/" rel="prev"><small>← Anterior</small><span>${esc(prev.nombre)}</span></a>
+            <a href="../${esc(next.id)}/" rel="next"><small>Siguiente →</small><span>${esc(next.nombre)}</span></a>
           </nav>
         </div>
       </article>`,
@@ -195,4 +208,4 @@ ${p.categoria === 'principales' && m.nota_principales ? `
 }
 
 console.log(`index.html: ${menus.map((m) => `${m.id} (${m.secciones.map((s) => `${s.platos.length} ${s.id}`).join(', ') || 'sin platos'})`).join('; ')}`);
-console.log(`${paginas} páginas de detalle${contacto ? '' : ' — falta contacto.url en data/menu-adultos.json: el botón "Escribinos" no se muestra'}`);
+console.log(`${paginas} páginas de detalle${contacto ? '' : ' — falta contacto.email en data/menu-adultos.json: el botón "Escribinos" no se muestra'}`);

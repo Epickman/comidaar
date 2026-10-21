@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../menu.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MenuItem","name":"Burrata con caponata siciliana","description":"Burrata con caponata siciliana y tosta di focaccia, con reducción de balsámico","image":"../../../assets/menu/entradas-02-burrata.webp"}</script>
+  <link rel="prefetch" href="../entradas-01-burrata/">
+  <link rel="prefetch" href="../entradas-03-caviar-de-berenjena/">
+  <script>addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -32,7 +35,12 @@
 
   <main id="app">
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../assets/menu/entradas-02-burrata.webp" alt="Burrata con caponata siciliana" width="1200" height="676" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../assets/menu/entradas-02-burrata.webp" alt="Burrata con caponata siciliana" width="1200" height="676" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../entradas-01-burrata/" rel="prev" aria-label="Plato anterior: Burrata con jamón crudo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+          <a class="stage-nav stage-next" href="../entradas-03-caviar-de-berenjena/" rel="next" aria-label="Plato siguiente: Caviar de berenjena"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+          <span class="stage-count" aria-hidden="true">2 / 41</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">Premium · Platos de entrada</p>
@@ -41,12 +49,12 @@
 
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            
+            <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
           </section>
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../entradas-01-burrata/"><small>← Anterior</small><span>Burrata con jamón crudo</span></a>
-            <a href="../entradas-03-caviar-de-berenjena/"><small>Siguiente →</small><span>Caviar de berenjena</span></a>
+            <a href="../entradas-01-burrata/" rel="prev"><small>← Anterior</small><span>Burrata con jamón crudo</span></a>
+            <a href="../entradas-03-caviar-de-berenjena/" rel="next"><small>Siguiente →</small><span>Caviar de berenjena</span></a>
           </nav>
         </div>
       </article>

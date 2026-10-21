@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../menu.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MenuItem","name":"Lomo Yinyang","description":"Lomo Yinyang: lomo rebozado en sésamo con salsa teriyaki, arroz perfumado al limón y lactonesa de wasabi","image":"../../../assets/menu/principales-04-lomo-yinyang.webp"}</script>
+  <link rel="prefetch" href="../principales-03-lomo-al-pesto-gratinado/">
+  <link rel="prefetch" href="../principales-05-ojo-de-bife-a-baja-temperatura/">
+  <script>addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -32,7 +35,12 @@
 
   <main id="app">
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../assets/menu/principales-04-lomo-yinyang.webp" alt="Lomo Yinyang" width="1200" height="676" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../assets/menu/principales-04-lomo-yinyang.webp" alt="Lomo Yinyang" width="1200" height="676" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../principales-03-lomo-al-pesto-gratinado/" rel="prev" aria-label="Plato anterior: Lomo al pesto gratinado"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+          <a class="stage-nav stage-next" href="../principales-05-ojo-de-bife-a-baja-temperatura/" rel="next" aria-label="Plato siguiente: Ojo de bife a baja temperatura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+          <span class="stage-count" aria-hidden="true">16 / 41</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">Premium · Platos principales</p>
@@ -43,12 +51,12 @@
 
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            
+            <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
           </section>
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../principales-03-lomo-al-pesto-gratinado/"><small>← Anterior</small><span>Lomo al pesto gratinado</span></a>
-            <a href="../principales-05-ojo-de-bife-a-baja-temperatura/"><small>Siguiente →</small><span>Ojo de bife a baja temperatura</span></a>
+            <a href="../principales-03-lomo-al-pesto-gratinado/" rel="prev"><small>← Anterior</small><span>Lomo al pesto gratinado</span></a>
+            <a href="../principales-05-ojo-de-bife-a-baja-temperatura/" rel="next"><small>Siguiente →</small><span>Ojo de bife a baja temperatura</span></a>
           </nav>
         </div>
       </article>

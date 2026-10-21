@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../menu.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MenuItem","name":"Lomo maître d'hôtel","description":"Lomo con manteca maître d'hôtel, sobre puré de cabutias asadas, cebollitas a la plancha y fondo de carne","image":"../../../assets/menu/principales-01-lomo.webp"}</script>
+  <link rel="prefetch" href="../entradas-12-pure-de-arvejas-y-panceta/">
+  <link rel="prefetch" href="../principales-02-lomo-envuelto-en-panceta/">
+  <script>addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -32,7 +35,12 @@
 
   <main id="app">
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../assets/menu/principales-01-lomo.webp" alt="Lomo maître d&#39;hôtel" width="1200" height="676" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../assets/menu/principales-01-lomo.webp" alt="Lomo maître d&#39;hôtel" width="1200" height="676" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../entradas-12-pure-de-arvejas-y-panceta/" rel="prev" aria-label="Plato anterior: Puré de arvejas y panceta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+          <a class="stage-nav stage-next" href="../principales-02-lomo-envuelto-en-panceta/" rel="next" aria-label="Plato siguiente: Lomo envuelto en panceta"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+          <span class="stage-count" aria-hidden="true">13 / 41</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">Premium · Platos principales</p>
@@ -43,12 +51,12 @@
 
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            
+            <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
           </section>
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../entradas-12-pure-de-arvejas-y-panceta/"><small>← Anterior</small><span>Puré de arvejas y panceta</span></a>
-            <a href="../principales-02-lomo-envuelto-en-panceta/"><small>Siguiente →</small><span>Lomo envuelto en panceta</span></a>
+            <a href="../entradas-12-pure-de-arvejas-y-panceta/" rel="prev"><small>← Anterior</small><span>Puré de arvejas y panceta</span></a>
+            <a href="../principales-02-lomo-envuelto-en-panceta/" rel="next"><small>Siguiente →</small><span>Lomo envuelto en panceta</span></a>
           </nav>
         </div>
       </article>

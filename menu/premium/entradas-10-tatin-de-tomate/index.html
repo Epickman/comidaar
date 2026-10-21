@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../menu.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MenuItem","name":"Tatin de tomate","description":"Tatin de tomate, con aceite de queso y ajo, ensalada de rúcula, polvo de jamón serrano","image":"../../../assets/menu/entradas-10-tatin-de-tomate.webp"}</script>
+  <link rel="prefetch" href="../entradas-09-tiradito-de-salmon/">
+  <link rel="prefetch" href="../entradas-11-lactonesa-de-aceite-de-oliva/">
+  <script>addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -32,7 +35,12 @@
 
   <main id="app">
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../assets/menu/entradas-10-tatin-de-tomate.webp" alt="Tatin de tomate" width="1200" height="676" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../assets/menu/entradas-10-tatin-de-tomate.webp" alt="Tatin de tomate" width="1200" height="676" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../entradas-09-tiradito-de-salmon/" rel="prev" aria-label="Plato anterior: Tiradito de salmón"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+          <a class="stage-nav stage-next" href="../entradas-11-lactonesa-de-aceite-de-oliva/" rel="next" aria-label="Plato siguiente: Lactonesa con huevo a baja temperatura"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+          <span class="stage-count" aria-hidden="true">10 / 41</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">Premium · Platos de entrada</p>
@@ -41,12 +49,12 @@
 
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            
+            <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
           </section>
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../entradas-09-tiradito-de-salmon/"><small>← Anterior</small><span>Tiradito de salmón</span></a>
-            <a href="../entradas-11-lactonesa-de-aceite-de-oliva/"><small>Siguiente →</small><span>Lactonesa con huevo a baja temperatura</span></a>
+            <a href="../entradas-09-tiradito-de-salmon/" rel="prev"><small>← Anterior</small><span>Tiradito de salmón</span></a>
+            <a href="../entradas-11-lactonesa-de-aceite-de-oliva/" rel="next"><small>Siguiente →</small><span>Lactonesa con huevo a baja temperatura</span></a>
           </nav>
         </div>
       </article>

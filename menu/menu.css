@@ -64,3 +64,36 @@ html { scroll-behavior: smooth; }
 .menu-tab[aria-selected="true"] { color: var(--text); border-bottom-color: var(--text); }
 .menu-panel[hidden] { display: none; }
 .menu-vacio { margin: 64px 0 24px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--muted); }
+
+/* ---------- carrusel en el detalle: flechas sobre la foto ---------- */
+.stage-nav {
+  position: absolute; top: 50%; z-index: 1; display: grid; place-items: center;
+  width: 48px; height: 48px; margin-top: -24px; border-radius: 50%;
+  background: rgba(5, 5, 5, .55); border: 1px solid var(--line); color: var(--text);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: background .3s ease, border-color .3s ease;
+}
+.stage-nav:hover { background: rgba(5, 5, 5, .85); border-color: var(--text); }
+.stage-nav svg { width: 22px; height: 22px; }
+.stage-prev { left: 14px; }
+.stage-next { right: 14px; }
+.stage-count {
+  position: absolute; right: 14px; bottom: 12px; padding: 4px 10px; border-radius: 100px;
+  background: rgba(5, 5, 5, .55); font-size: .66rem; letter-spacing: .14em; color: var(--text);
+}
+.menu-detalle .stage { touch-action: pan-y; }
+
+/* deslizamiento entre platos (navegadores con View Transitions entre páginas) */
+@view-transition { navigation: auto; }
+.menu-detalle { view-transition-name: plato; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+html:active-view-transition-type(siguiente)::view-transition-old(plato) { animation: .45s var(--ease) both carrusel-salir-izq; }
+html:active-view-transition-type(siguiente)::view-transition-new(plato) { animation: .45s var(--ease) both carrusel-entrar-der; }
+html:active-view-transition-type(anterior)::view-transition-old(plato) { animation: .45s var(--ease) both carrusel-salir-der; }
+html:active-view-transition-type(anterior)::view-transition-new(plato) { animation: .45s var(--ease) both carrusel-entrar-izq; }
+@keyframes carrusel-salir-izq { to { transform: translateX(-10%); opacity: 0; } }
+@keyframes carrusel-salir-der { to { transform: translateX(10%); opacity: 0; } }
+@keyframes carrusel-entrar-der { from { transform: translateX(10%); opacity: 0; } }
+@keyframes carrusel-entrar-izq { from { transform: translateX(-10%); opacity: 0; } }
+/* al pasar de plato no se repite la entrada suave de la página */
+html.carrusel .menu-detalle :is(.stage, .info > *) { animation: none; }

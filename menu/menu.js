@@ -63,4 +63,30 @@
   }, { rootMargin: '-35% 0px -55% 0px' });
   secciones.forEach((s) => io.observe(s));
 
+  // ---------- detalle: pasar de plato con flechas, teclado o deslizando la foto ----------
+  const anterior = document.querySelector('.stage-prev');
+  const siguiente = document.querySelector('.stage-next');
+  if (anterior && siguiente) {
+    const recordar = (dir) => { try { sessionStorage.setItem('menu-dir', dir); } catch {} };
+    const ir = (a, dir) => { recordar(dir); location.href = a.href; };
+    document.querySelectorAll('a[rel="prev"]').forEach((a) => a.addEventListener('click', () => recordar('anterior')));
+    document.querySelectorAll('a[rel="next"]').forEach((a) => a.addEventListener('click', () => recordar('siguiente')));
+
+    addEventListener('keydown', (e) => {
+      if (e.altKey || e.ctrlKey || e.metaKey || e.shiftKey) return;
+      if (e.key === 'ArrowLeft') ir(anterior, 'anterior');
+      if (e.key === 'ArrowRight') ir(siguiente, 'siguiente');
+    });
+
+    const stage = document.querySelector('.menu-detalle .stage');
+    let x0 = null;
+    stage.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+    stage.addEventListener('touchend', (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 50) dx < 0 ? ir(siguiente, 'siguiente') : ir(anterior, 'anterior');
+    });
+  }
+
 })();

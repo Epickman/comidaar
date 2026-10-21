@@ -14,6 +14,9 @@
   <link rel="stylesheet" href="../../../styles.css">
   <link rel="stylesheet" href="../../menu.css">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"MenuItem","name":"Pavlova deconstruida","description":"Pavlova deconstruida con focaccia de chocolate","image":"../../../assets/menu/postres-03-pavlova-deconstruida.webp"}</script>
+  <link rel="prefetch" href="../postres-02-pera-rellena-envuelta-en-pan-brioche/">
+  <link rel="prefetch" href="../postres-04-ravioles-de-anana/">
+  <script>addEventListener('pagereveal',(e)=>{let d;try{d=sessionStorage.getItem('menu-dir');sessionStorage.removeItem('menu-dir')}catch{}if(d&&e.viewTransition){e.viewTransition.types.add(d);document.documentElement.classList.add('carrusel')}})</script>
 </head>
 <body data-view="menu">
   <div class="grain" aria-hidden="true"></div>
@@ -32,7 +35,12 @@
 
   <main id="app">
       <article class="detail menu-detalle">
-        <div class="stage"><img src="../../../assets/menu/postres-03-pavlova-deconstruida.webp" alt="Pavlova deconstruida" width="1200" height="676" fetchpriority="high"></div>
+        <div class="stage">
+          <img src="../../../assets/menu/postres-03-pavlova-deconstruida.webp" alt="Pavlova deconstruida" width="1200" height="676" fetchpriority="high">
+          <a class="stage-nav stage-prev" href="../postres-02-pera-rellena-envuelta-en-pan-brioche/" rel="prev" aria-label="Plato anterior: Pera rellena en brioche"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></a>
+          <a class="stage-nav stage-next" href="../postres-04-ravioles-de-anana/" rel="next" aria-label="Plato siguiente: Ravioles de ananá"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg></a>
+          <span class="stage-count" aria-hidden="true">26 / 41</span>
+        </div>
 
         <div class="info">
           <p class="eyebrow">Premium · Postres</p>
@@ -41,12 +49,12 @@
 
           <section class="menu-cta">
             <p>¿No encontrás lo que te gusta?</p>
-            
+            <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
           </section>
 
           <nav class="pager" aria-label="Otros platos">
-            <a href="../postres-02-pera-rellena-envuelta-en-pan-brioche/"><small>← Anterior</small><span>Pera rellena en brioche</span></a>
-            <a href="../postres-04-ravioles-de-anana/"><small>Siguiente →</small><span>Ravioles de ananá</span></a>
+            <a href="../postres-02-pera-rellena-envuelta-en-pan-brioche/" rel="prev"><small>← Anterior</small><span>Pera rellena en brioche</span></a>
+            <a href="../postres-04-ravioles-de-anana/" rel="next"><small>Siguiente →</small><span>Ravioles de ananá</span></a>
           </nav>
         </div>
       </article>
