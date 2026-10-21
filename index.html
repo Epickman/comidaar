@@ -33,6 +33,13 @@
       <p>Elegí un plato para conocer sus ingredientes, alérgenos y el vino que lo acompaña.</p>
     </section>
 
+    <div class="buscador" role="search">
+      <label class="sr-only" for="buscar">Buscar un plato</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+      <input id="buscar" type="search" placeholder="Buscar un plato o ingrediente" autocomplete="off" enterkeyhint="search">
+      <p class="buscador-estado" aria-live="polite"></p>
+    </div>
+
     <div class="menu-tabs" role="tablist" aria-label="Tipo de menú">
       <button type="button" class="menu-tab" role="tab" id="tab-premium" aria-controls="premium" aria-selected="true">Premium</button>
       <button type="button" class="menu-tab" role="tab" id="tab-regular" aria-controls="regular" aria-selected="false" tabindex="-1">Regular</button>
@@ -432,6 +439,13 @@
             </li>
         </ul>
       </section>
+      <div class="menu-sin-resultados" hidden>
+        <p>No encontramos platos con “<span></span>”.</p>
+        <div class="menu-cta">
+          <p>¿No encontrás lo que te gusta?</p>
+          <a class="menu-cta-btn" href="mailto:contacto@vonharv.com?subject=Consulta%20sobre%20el%20Men%C3%BA%20adultos%20PREMIUM">Escribinos</a>
+        </div>
+      </div>
     </div>
 
     <div class="menu-panel" id="regular" role="tabpanel" aria-labelledby="tab-regular" hidden>

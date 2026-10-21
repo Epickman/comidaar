@@ -24,6 +24,7 @@
     });
     if (foco) tabs[i].focus();
     if (hash) history.replaceState(null, '', `#${panels[i].id}`);
+    document.getElementById('buscar')?.dispatchEvent(new Event('input')); // actualiza el conteo
   }
 
   tabs.forEach((t, i) => {
@@ -65,6 +66,38 @@
     marcar();
   }, { rootMargin: '-35% 0px -55% 0px' });
   secciones.forEach((s) => io.observe(s));
+
+  // ---------- buscador (inicio): filtra por nombre y descripción, sin importar tildes ----------
+  const buscar = document.getElementById('buscar');
+  if (buscar) {
+    const normalizar = (t) => t.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    const estado = document.querySelector('.buscador-estado');
+    const items = [...document.querySelectorAll('.menu-card')].map((c) => ({ li: c.parentElement, texto: normalizar(c.textContent) }));
+
+    buscar.addEventListener('input', () => {
+      const q = normalizar(buscar.value.trim());
+      const palabras = q.split(/\s+/).filter(Boolean);
+      items.forEach((it) => { it.li.hidden = !palabras.every((w) => it.texto.includes(w)); });
+      panels.forEach((panel) => {
+        let total = 0;
+        panel.querySelectorAll('.menu-section').forEach((sec) => {
+          const n = sec.querySelectorAll('.menu-grid li:not([hidden])').length;
+          sec.hidden = !n;
+          panel.querySelector(`.menu-nav .chip[href="#${sec.id}"]`).hidden = !n;
+          total += n;
+        });
+        const sin = panel.querySelector('.menu-sin-resultados');
+        if (sin) {
+          sin.hidden = !q || total > 0;
+          sin.querySelector('span').textContent = buscar.value.trim();
+        }
+        const nav = panel.querySelector('.menu-nav');
+        if (nav) nav.hidden = q && !total;
+        const conPlatos = panel.querySelector('.menu-section');
+        if (!panel.hidden) estado.textContent = q && conPlatos ? (total === 1 ? '1 plato' : `${total} platos`) : '';
+      });
+    });
+  }
 
   // ---------- carrusel de platos ----------
   const pista = document.querySelector('.carrusel-pista');

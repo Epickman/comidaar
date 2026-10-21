@@ -38,6 +38,18 @@ html { scroll-behavior: smooth; }
   display: block; margin-bottom: 6px; font: normal 400 .66rem var(--sans); letter-spacing: .32em; text-transform: uppercase; color: var(--muted);
 }
 
+/* ---------- "¿No encontrás lo que te gusta? Escribinos" ---------- */
+.menu-cta {
+  padding: 24px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 16px 24px; text-align: center;
+}
+.menu-cta p { margin: 0; font-family: var(--serif); font-style: italic; font-size: clamp(1.2rem, 1.7vw, 1.45rem); line-height: 1.4; }
+.menu-cta-btn {
+  padding: 12px 26px; border-radius: 100px; border: 1px solid var(--text); background: var(--text); color: var(--accent-ink);
+  font-size: .7rem; font-weight: 500; letter-spacing: .14em; text-transform: uppercase; transition: background .3s ease, color .3s ease;
+}
+.menu-cta-btn:hover { background: transparent; color: var(--text); }
+
 /* ---------- pestañas Premium / Tradicional ---------- */
 /* fija debajo del header al scrollear */
 .menu-tabs { position: sticky; top: var(--header-h); z-index: 11; display: flex; justify-content: center; margin: 8px 0 0; background: var(--bg); border-bottom: 1px solid var(--line); }
@@ -114,4 +126,21 @@ html { scroll-behavior: smooth; }
 .lista-box[aria-current="true"] { border-color: var(--text); }
 .lista-box img { width: 100%; aspect-ratio: 16 / 9; height: auto; object-fit: cover; background: var(--surface-2); }
 .lista-box span { padding: 12px 14px 14px; font-family: var(--serif); font-size: 1.02rem; line-height: 1.25; }
-.carrusel ~ .menu-cta { max-width: 620px; margin: 48px auto 0; padding: 24px 0; justify-content: center; text-align: center; }
+.carrusel ~ .menu-cta { max-width: 620px; margin: 48px auto 0; }
+
+/* ---------- buscador ---------- */
+.sr-only { position: absolute; width: 1px; height: 1px; margin: -1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.buscador { position: relative; max-width: 520px; margin: 0 auto 28px; }
+.buscador svg { position: absolute; left: 20px; top: 15px; width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
+.buscador input {
+  width: 100%; padding: 14px 20px 14px 52px; border-radius: 100px;
+  background: var(--surface); border: 1px solid var(--line); color: var(--text);
+  font: 300 1rem var(--sans); transition: border-color .3s ease;
+}
+.buscador input::placeholder { color: var(--muted); }
+.buscador input:focus { outline: none; border-color: var(--text); }
+.buscador-estado { min-height: 1.2em; margin: 10px 0 0; text-align: center; font-size: .74rem; letter-spacing: .08em; color: var(--muted); }
+.menu-grid li[hidden], .menu-section[hidden], .menu-nav[hidden], .menu-nav .chip[hidden], .menu-sin-resultados[hidden] { display: none; }
+.menu-sin-resultados { margin: 56px auto 0; max-width: 620px; text-align: center; }
+.menu-sin-resultados > p { margin: 0; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--muted); }
+.menu-sin-resultados .menu-cta { margin-top: 24px; }

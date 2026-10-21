@@ -83,6 +83,13 @@ function pagina({ base, menuBase, titulo, descripcion, jsonLd, volver, cuerpo, h
 `;
 }
 
+const contacto = data.contacto?.email;
+const cta = (m) => `
+        <div class="menu-cta">
+          <p>¿No encontrás lo que te gusta?</p>
+          ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
+        </div>`;
+
 // ---------- inicio: index.html ----------
 let n = 0;
 function card(m, p) {
@@ -110,7 +117,10 @@ ${m.secciones.map((s) => `
         <ul class="menu-grid">${s.platos.map((p) => card(m, p)).join('')}
         </ul>${s.id === 'principales' && m.nota_principales ? `
         <aside class="menu-nota"><strong>Nota</strong> ${esc(m.nota_principales)}</aside>` : ''}
-      </section>`).join('\n')}` : `
+      </section>`).join('\n')}
+      <div class="menu-sin-resultados" hidden>
+        <p>No encontramos platos con “<span></span>”.</p>${cta(m)}
+      </div>` : `
       <p class="menu-vacio">Próximamente.</p>`;
   return `
     <div class="menu-panel" id="${m.id}" role="tabpanel" aria-labelledby="tab-${m.id}"${i ? ' hidden' : ''}>${contenido}
@@ -143,6 +153,13 @@ writeFileSync(new URL('index.html', root), pagina({
       <p>Elegí un plato para conocer sus ingredientes, alérgenos y el vino que lo acompaña.</p>
     </section>
 
+    <div class="buscador" role="search">
+      <label class="sr-only" for="buscar">Buscar un plato</label>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="M20 20l-4.2-4.2"/></svg>
+      <input id="buscar" type="search" placeholder="Buscar un plato o ingrediente" autocomplete="off" enterkeyhint="search">
+      <p class="buscador-estado" aria-live="polite"></p>
+    </div>
+
     <div class="menu-tabs" role="tablist" aria-label="Tipo de menú">
       ${menus.map((m, i) => `<button type="button" class="menu-tab" role="tab" id="tab-${m.id}" aria-controls="${m.id}" aria-selected="${!i}"${i ? ' tabindex="-1"' : ''}>${esc(m.nombre)}</button>`).join('\n      ')}
     </div>
@@ -150,12 +167,6 @@ ${menus.map(panel).join('\n')}`,
 }));
 
 // ---------- detalle: menu/<menu>/<plato>/index.html ----------
-const contacto = data.contacto?.email;
-const cta = (m) => `
-        <div class="menu-cta">
-          <p>¿No encontrás lo que te gusta?</p>
-          ${contacto ? `<a class="menu-cta-btn" href="mailto:${esc(contacto)}?subject=${encodeURIComponent(`Consulta sobre el ${m.titulo}`)}">Escribinos</a>` : ''}
-        </div>`;
 const FLECHA = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="${d}"/></svg>`;
 
 // Cada página de plato trae el carrusel completo de su menú, arrancando en ese plato.
