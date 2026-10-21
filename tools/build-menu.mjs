@@ -183,8 +183,6 @@ for (const m of menus) {
       <article class="detail menu-detalle">
         <div class="stage">
           <img src="../../../${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}" fetchpriority="high">
-          <a class="stage-nav stage-prev" href="../${esc(prev.id)}/" rel="prev" aria-label="Plato anterior: ${esc(prev.nombre)}">${FLECHA('M15 5l-7 7 7 7')}</a>
-          <a class="stage-nav stage-next" href="../${esc(next.id)}/" rel="next" aria-label="Plato siguiente: ${esc(next.nombre)}">${FLECHA('M9 5l7 7-7 7')}</a>
           <span class="stage-count" aria-hidden="true">${i + 1} / ${m.orden.length}</span>
         </div>
 
@@ -201,7 +199,12 @@ ${p.categoria === 'principales' && m.nota_principales ? `
             <a href="../${esc(next.id)}/" rel="next"><small>Siguiente →</small><span>${esc(next.nombre)}</span></a>
           </nav>
         </div>
-      </article>`,
+      </article>
+
+      <nav class="menu-flechas" aria-label="Cambiar de plato">
+        <a class="stage-nav stage-prev" href="../${esc(prev.id)}/" rel="prev" aria-label="Plato anterior: ${esc(prev.nombre)}">${FLECHA('M15 5l-7 7 7 7')}</a>
+        <a class="stage-nav stage-next" href="../${esc(next.id)}/" rel="next" aria-label="Plato siguiente: ${esc(next.nombre)}">${FLECHA('M9 5l7 7-7 7')}</a>
+      </nav>`,
     }));
     paginas++;
   });

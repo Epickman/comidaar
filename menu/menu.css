@@ -65,18 +65,28 @@ html { scroll-behavior: smooth; }
 .menu-panel[hidden] { display: none; }
 .menu-vacio { margin: 64px 0 24px; text-align: center; font-family: var(--serif); font-style: italic; font-size: 1.3rem; color: var(--muted); }
 
-/* ---------- carrusel en el detalle: flechas sobre la foto ---------- */
+/* ---------- carrusel en el detalle: flechas a los lados de la página ---------- */
+main:has(.menu-detalle) { position: relative; }
 .stage-nav {
-  position: absolute; top: 50%; z-index: 1; display: grid; place-items: center;
-  width: 48px; height: 48px; margin-top: -24px; border-radius: 50%;
+  position: absolute; z-index: 15; display: grid; place-items: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  /* en mobile, a la altura del centro de la foto (16:9 a todo el ancho) */
+  top: calc(100vw * 9 / 32 - 22px);
   background: rgba(5, 5, 5, .55); border: 1px solid var(--line); color: var(--text);
   backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
   transition: background .3s ease, border-color .3s ease;
 }
 .stage-nav:hover { background: rgba(5, 5, 5, .85); border-color: var(--text); }
 .stage-nav svg { width: 22px; height: 22px; }
-.stage-prev { left: 14px; }
-.stage-next { right: 14px; }
+.stage-prev { left: 10px; }
+.stage-next { right: 10px; }
+/* en desktop, fijas a los costados del contenido y centradas en la pantalla */
+@media (min-width: 960px) {
+  main:has(.menu-detalle) { padding-left: 92px; padding-right: 92px; }
+  .stage-nav { position: fixed; top: 50%; width: 52px; height: 52px; margin-top: -26px; }
+  .stage-prev { left: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
+  .stage-next { right: calc(max(0px, (100vw - 1240px) / 2) + 20px); }
+}
 .stage-count {
   position: absolute; right: 14px; bottom: 12px; padding: 4px 10px; border-radius: 100px;
   background: rgba(5, 5, 5, .55); font-size: .66rem; letter-spacing: .14em; color: var(--text);
