@@ -181,8 +181,8 @@ html { scroll-behavior: smooth; }
 }
 .carrusel-flecha:hover { background: rgba(5, 5, 5, .9); border-color: var(--text); }
 .carrusel-flecha svg { width: 22px; height: 22px; }
-.carrusel-prev { left: max(10px, calc(50vw - var(--card-w) / 2 - 76px)); }
-.carrusel-next { right: max(10px, calc(50vw - var(--card-w) / 2 - 76px)); }
+.carrusel-prev { left: clamp(10px, 2vw, 28px); }
+.carrusel-next { right: clamp(10px, 2vw, 28px); }
 
 .carrusel-count { margin: 28px 0 0; font-size: .72rem; letter-spacing: .24em; color: var(--muted); font-variant-numeric: tabular-nums; }
 .carrusel-count span { color: var(--text); }
