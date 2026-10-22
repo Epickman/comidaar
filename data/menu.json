@@ -391,8 +391,337 @@
       "id": "adultos-tradicional",
       "nombre": "Adultos Tradicional",
       "titulo": "Menú adultos tradicional",
-      "nota_principales": null,
-      "platos": []
+      "nota_principales": "Según el menú abonado, en los platos 'Carne o ave/bondiola' se puede elegir el plato y combinar guarniciones y salsas.",
+      "platos": [
+        {
+          "id": "entradas-01-burrata",
+          "categoria": "entradas",
+          "orden": 1,
+          "nombre": "Burrata con jamón crudo",
+          "descripcion": "Burrata con jamón crudo, tomate asado, rúcula y aceite de albahaca",
+          "imagen": "assets/menu/entradas-01-burrata.webp"
+        },
+        {
+          "id": "entradas-02-burrata",
+          "categoria": "entradas",
+          "orden": 2,
+          "nombre": "Burrata con caponata siciliana",
+          "descripcion": "Burrata con caponata siciliana y tosta di focaccia, con reducción de balsámico",
+          "imagen": "assets/menu/entradas-02-burrata.webp"
+        },
+        {
+          "id": "entradas-03-caviar-de-berenjena",
+          "categoria": "entradas",
+          "orden": 3,
+          "nombre": "Caviar de berenjena",
+          "descripcion": "Caviar de berenjena, tomate asado, bocconcino, aceite de hierbas y almendras tostadas",
+          "imagen": "assets/menu/entradas-03-caviar-de-berenjena.webp"
+        },
+        {
+          "id": "entradas-04-ensalada-de-quinoa",
+          "categoria": "entradas",
+          "orden": 4,
+          "nombre": "Ensalada de quinoa y langostinos",
+          "descripcion": "Ensalada de quinoa, con pico de gallo, langostinos y cremoso de palta",
+          "imagen": "assets/menu/entradas-04-ensalada-de-quinoa.webp"
+        },
+        {
+          "id": "entradas-05-canelon-de-zucchini",
+          "categoria": "entradas",
+          "orden": 5,
+          "nombre": "Canelón de zucchini",
+          "descripcion": "Canelón de zucchini, relleno de ricota y langostinos, emulsión de perejil, azafrán y migas tostadas",
+          "imagen": "assets/menu/entradas-05-canelon-de-zucchini.webp"
+        },
+        {
+          "id": "entradas-06-paquetitos-de-langostinos",
+          "categoria": "entradas",
+          "orden": 6,
+          "nombre": "Paquetitos de langostinos",
+          "descripcion": "Paquetitos de langostinos, rellenos de ricota, panceta con una ensalada fresca y leche de tigre",
+          "imagen": "assets/menu/entradas-06-paquetitos-de-langostinos.webp"
+        },
+        {
+          "id": "entradas-07-salmon-sous-vide",
+          "categoria": "entradas",
+          "orden": 7,
+          "nombre": "Salmón sous vide",
+          "descripcion": "Salmón sous vide, papas confitadas, remolachas asadas, yogurt, limón y sésamo",
+          "imagen": "assets/menu/entradas-07-salmon-sous-vide.webp"
+        },
+        {
+          "id": "entradas-08-canelon-de-salmon-relleno-de-cremoso-de-queso",
+          "categoria": "entradas",
+          "orden": 8,
+          "nombre": "Canelón de salmón",
+          "descripcion": "Canelón de salmón relleno de cremoso de queso, apio y verdeo sobre encurtido de pepino, gremolata y almendras tostadas",
+          "imagen": "assets/menu/entradas-08-canelon-de-salmon-relleno-de-cremoso-de-queso.webp"
+        },
+        {
+          "id": "entradas-09-tiradito-de-salmon",
+          "categoria": "entradas",
+          "orden": 9,
+          "nombre": "Tiradito de salmón",
+          "descripcion": "Tiradito de salmón, hinojos encurtidos, maíz cancha y yogurt",
+          "imagen": "assets/menu/entradas-09-tiradito-de-salmon.webp"
+        },
+        {
+          "id": "entradas-10-tatin-de-tomate",
+          "categoria": "entradas",
+          "orden": 10,
+          "nombre": "Tatin de tomate",
+          "descripcion": "Tatin de tomate, con aceite de queso y ajo, ensalada de rúcula, polvo de jamón serrano",
+          "imagen": "assets/menu/entradas-10-tatin-de-tomate.webp"
+        },
+        {
+          "id": "entradas-11-lactonesa-de-aceite-de-oliva",
+          "categoria": "entradas",
+          "orden": 11,
+          "nombre": "Lactonesa con huevo a baja temperatura",
+          "descripcion": "Lactonesa de aceite de oliva, huevo a baja temperatura, alcauciles, viruta de jamón serrano, crutones y aceite de pimentón",
+          "imagen": "assets/menu/entradas-11-lactonesa-de-aceite-de-oliva.webp"
+        },
+        {
+          "id": "entradas-12-pure-de-arvejas-y-panceta",
+          "categoria": "entradas",
+          "orden": 12,
+          "nombre": "Puré de arvejas y panceta",
+          "descripcion": "Puré de arvejas y panceta, cebolla encurtida, gajos de naranja, langostinos al vapor y polvo de panceta",
+          "imagen": "assets/menu/entradas-12-pure-de-arvejas-y-panceta.webp"
+        },
+        {
+          "id": "principales-01-lomo",
+          "categoria": "principales",
+          "orden": 1,
+          "nombre": "Lomo maître d'hôtel",
+          "descripcion": "Lomo con manteca maître d'hôtel, sobre puré de cabutias asadas, cebollitas a la plancha y fondo de carne",
+          "imagen": "assets/menu/principales-01-lomo.webp"
+        },
+        {
+          "id": "principales-02-lomo-envuelto-en-panceta",
+          "categoria": "principales",
+          "orden": 2,
+          "nombre": "Lomo envuelto en panceta",
+          "descripcion": "Lomo envuelto en panceta, sobre focaccia y espinacas salteadas, tomate provenzal, cremoso de papa y aceite de hongos",
+          "imagen": "assets/menu/principales-02-lomo-envuelto-en-panceta.webp"
+        },
+        {
+          "id": "principales-03-lomo-al-pesto-gratinado",
+          "categoria": "principales",
+          "orden": 3,
+          "nombre": "Lomo al pesto gratinado",
+          "descripcion": "Lomo al pesto gratinado sobre puré de papas al verdeo, fondo de carne y aceite verde",
+          "imagen": "assets/menu/principales-03-lomo-al-pesto-gratinado.webp"
+        },
+        {
+          "id": "principales-04-lomo-yinyang",
+          "categoria": "principales",
+          "orden": 4,
+          "nombre": "Lomo Yinyang",
+          "descripcion": "Lomo Yinyang: lomo rebozado en sésamo con salsa teriyaki, arroz perfumado al limón y lactonesa de wasabi",
+          "imagen": "assets/menu/principales-04-lomo-yinyang.webp"
+        },
+        {
+          "id": "principales-05-ojo-de-bife-a-baja-temperatura",
+          "categoria": "principales",
+          "orden": 5,
+          "nombre": "Ojo de bife a baja temperatura",
+          "descripcion": "Ojo de bife a baja temperatura sobre cremoso de choclo, con ensalada de pico de gallo y aceite de cilantro",
+          "imagen": "assets/menu/principales-05-ojo-de-bife-a-baja-temperatura.webp"
+        },
+        {
+          "id": "principales-06-roast-beef",
+          "categoria": "principales",
+          "orden": 6,
+          "nombre": "Roast beef con vinagreta de hongos",
+          "descripcion": "Roast beef con vegetales salteados y vinagreta tibia de hongos y ciboulette",
+          "imagen": "assets/menu/principales-06-roast-beef.webp"
+        },
+        {
+          "id": "principales-07-roast-beef",
+          "categoria": "principales",
+          "orden": 7,
+          "nombre": "Roast beef al curry",
+          "descripcion": "Roast beef con salsa de curry sobre puré duquesa con ciboulette, paquetito de panceta y chauchas",
+          "imagen": "assets/menu/principales-07-roast-beef.webp"
+        },
+        {
+          "id": "principales-08-roast-beef",
+          "categoria": "principales",
+          "orden": 8,
+          "nombre": "Roast beef con mojo rojo",
+          "descripcion": "Roast beef sobre puré de nabo, mojo rojo canario y alioli",
+          "imagen": "assets/menu/principales-08-roast-beef.webp"
+        },
+        {
+          "id": "principales-09-carne-o-ave-bondiola",
+          "categoria": "principales",
+          "orden": 9,
+          "nombre": "Carne o ave/bondiola con salsa champignon",
+          "descripcion": "Carne o ave/bondiola con salsa champignon, gratín de papas y ratatouille",
+          "imagen": "assets/menu/principales-09-carne-o-ave-bondiola.webp"
+        },
+        {
+          "id": "principales-10-carne-o-ave-bondiola",
+          "categoria": "principales",
+          "orden": 10,
+          "nombre": "Carne o ave/bondiola con salsa ciboulette",
+          "descripcion": "Carne o ave/bondiola con salsa ciboulette, puré de papas al limón y zanahorias glaseadas",
+          "imagen": "assets/menu/principales-10-carne-o-ave-bondiola.webp"
+        },
+        {
+          "id": "principales-11-carne-o-ave-bondiola",
+          "categoria": "principales",
+          "orden": 11,
+          "nombre": "Carne o ave/bondiola con salsa parmesano",
+          "descripcion": "Carne o ave/bondiola con salsa parmesano, papines al ajillo y tomates asados",
+          "imagen": "assets/menu/principales-11-carne-o-ave-bondiola.webp"
+        },
+        {
+          "id": "postres-01-semifreddo-de-maracuya",
+          "categoria": "postres",
+          "orden": 1,
+          "nombre": "Semifreddo de maracuyá",
+          "descripcion": "Semifreddo de maracuyá, chocolate y yogurt",
+          "imagen": "assets/menu/postres-01-semifreddo-de-maracuya.webp"
+        },
+        {
+          "id": "postres-02-pera-rellena-envuelta-en-pan-brioche",
+          "categoria": "postres",
+          "orden": 2,
+          "nombre": "Pera rellena en brioche",
+          "descripcion": "Pera rellena envuelta en pan brioche sobre sopa de chocolate y crema chantilly",
+          "imagen": "assets/menu/postres-02-pera-rellena-envuelta-en-pan-brioche.webp"
+        },
+        {
+          "id": "postres-03-pavlova-deconstruida",
+          "categoria": "postres",
+          "orden": 3,
+          "nombre": "Pavlova deconstruida",
+          "descripcion": "Pavlova deconstruida con focaccia de chocolate",
+          "imagen": "assets/menu/postres-03-pavlova-deconstruida.webp"
+        },
+        {
+          "id": "postres-04-ravioles-de-anana",
+          "categoria": "postres",
+          "orden": 4,
+          "nombre": "Ravioles de ananá",
+          "descripcion": "Ravioles de ananá con mousse de queso, confitura de uva y chocolate",
+          "imagen": "assets/menu/postres-04-ravioles-de-anana.webp"
+        },
+        {
+          "id": "postres-05-profiterol-relleno-de-naranjas-de-la-quinta-y-cho",
+          "categoria": "postres",
+          "orden": 5,
+          "nombre": "Profiterol de naranjas de la quinta",
+          "descripcion": "Profiterol relleno de naranjas de la quinta y chocolate, sobre sambayón",
+          "imagen": "assets/menu/postres-05-profiterol-relleno-de-naranjas-de-la-quinta-y-cho.webp"
+        },
+        {
+          "id": "postres-06-chocolate-en-texturas-y-citricos",
+          "categoria": "postres",
+          "orden": 6,
+          "nombre": "Chocolate en texturas y cítricos",
+          "descripcion": "Chocolate en texturas y cítricos",
+          "imagen": "assets/menu/postres-06-chocolate-en-texturas-y-citricos.webp"
+        },
+        {
+          "id": "postres-07-profiterol-relleno-de-dulce-de-leche-granizado",
+          "categoria": "postres",
+          "orden": 7,
+          "nombre": "Profiterol de dulce de leche granizado",
+          "descripcion": "Profiterol relleno de dulce de leche granizado, coulis de frutilla, merengues y teja de chocolate",
+          "imagen": "assets/menu/postres-07-profiterol-relleno-de-dulce-de-leche-granizado.webp"
+        },
+        {
+          "id": "postres-08-lemon-pie-deconstruido",
+          "categoria": "postres",
+          "orden": 8,
+          "nombre": "Lemon pie deconstruido",
+          "descripcion": "Lemon pie deconstruido con cremoso de chocolate",
+          "imagen": "assets/menu/postres-08-lemon-pie-deconstruido.webp"
+        },
+        {
+          "id": "postres-09-profiterol-relleno-de-helado-almendrado-y-salsa-t",
+          "categoria": "postres",
+          "orden": 9,
+          "nombre": "Profiterol de helado almendrado",
+          "descripcion": "Profiterol relleno de helado almendrado y salsa tibia de chocolate",
+          "imagen": "assets/menu/postres-09-profiterol-relleno-de-helado-almendrado-y-salsa-t.webp"
+        },
+        {
+          "id": "postres-10-milhojas-de-manzana",
+          "categoria": "postres",
+          "orden": 10,
+          "nombre": "Milhojas de manzana",
+          "descripcion": "Milhojas de manzana, crumble de almendras, salsa toffee y crema semimontada",
+          "imagen": "assets/menu/postres-10-milhojas-de-manzana.webp"
+        },
+        {
+          "id": "postres-11-crumble-de-manzana-y-helado",
+          "categoria": "postres",
+          "orden": 11,
+          "nombre": "Crumble de manzana y helado",
+          "descripcion": "Crumble de manzana y helado",
+          "imagen": "assets/menu/postres-11-crumble-de-manzana-y-helado.webp"
+        },
+        {
+          "id": "postres-12-tarta-de-cafe",
+          "categoria": "postres",
+          "orden": 12,
+          "nombre": "Tarta de café",
+          "descripcion": "Tarta de café con craquelado de canela y quenelle de sambayón",
+          "imagen": "assets/menu/postres-12-tarta-de-cafe.webp"
+        },
+        {
+          "id": "postres-13-french-toast",
+          "categoria": "postres",
+          "orden": 13,
+          "nombre": "French toast",
+          "descripcion": "French toast con helado de mascarpone y salsa de frutos rojos",
+          "imagen": "assets/menu/postres-13-french-toast.webp"
+        },
+        {
+          "id": "postres-14-pavlova-de-frutillas",
+          "categoria": "postres",
+          "orden": 14,
+          "nombre": "Pavlova de frutillas",
+          "descripcion": "Pavlova de frutillas",
+          "imagen": "assets/menu/postres-14-pavlova-de-frutillas.webp"
+        },
+        {
+          "id": "postres-15-biscuit-de-coco",
+          "categoria": "postres",
+          "orden": 15,
+          "nombre": "Biscuit de coco",
+          "descripcion": "Biscuit de coco, mousse de dulce de leche, ananá confitado y crocante de maíz y chocolate",
+          "imagen": "assets/menu/postres-15-biscuit-de-coco.webp"
+        },
+        {
+          "id": "postres-16-mousse-tres-chocolates",
+          "categoria": "postres",
+          "orden": 16,
+          "nombre": "Mousse tres chocolates",
+          "descripcion": "Mousse tres chocolates",
+          "imagen": "assets/menu/postres-16-mousse-tres-chocolates.webp"
+        },
+        {
+          "id": "postres-17-lingote-de-mousse-de-chocolate",
+          "categoria": "postres",
+          "orden": 17,
+          "nombre": "Lingote de mousse de chocolate",
+          "descripcion": "Lingote de mousse de chocolate con frutillas y crema",
+          "imagen": "assets/menu/postres-17-lingote-de-mousse-de-chocolate.webp"
+        },
+        {
+          "id": "postres-18-bavaroise-de-frambuesa",
+          "categoria": "postres",
+          "orden": 18,
+          "nombre": "Bavaroise de frambuesa",
+          "descripcion": "Bavaroise de frambuesa",
+          "imagen": "assets/menu/postres-18-bavaroise-de-frambuesa.webp"
+        }
+      ]
     },
     {
       "id": "adolescentes",

@@ -98,7 +98,7 @@ function card(m, p) {
   const lazy = n++ >= EAGER;
   return `
             <li>
-              <a class="menu-card" id="${esc(p.id)}" href="menu/${m.id}/${esc(p.id)}/">
+              <a class="menu-card" id="${m.id}-${esc(p.id)}" href="menu/${m.id}/${esc(p.id)}/">
                 <span class="menu-card-media"><img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" width="${IMG_W}" height="${IMG_H}"${lazy ? ' loading="lazy"' : ' fetchpriority="high"'} decoding="async"></span>
                 <span class="menu-card-body">
                   <span class="menu-card-title">${esc(p.nombre)}</span>
